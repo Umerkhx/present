@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { AlertCircle, Check, CheckCircle, Navigation, Users } from "lucide-react"
+import { AlertCircle, Check, Navigation, Users } from "lucide-react"
 import { useState } from "react"
 import { Button } from "..//components/ui/button"
 import { Alert, AlertDescription } from "../components/ui/alert"
