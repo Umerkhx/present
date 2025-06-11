@@ -4,14 +4,12 @@ import Toggle from './Toggle';
 interface CheckInSettingsProps {
   openCheckIn: boolean;
   checkAttendeeLocation: boolean;
-  addQuestions: boolean;
   onChange: (name: string, value: any) => void;
 }
 
 const CheckInSettings: React.FC<CheckInSettingsProps> = ({
   openCheckIn,
   checkAttendeeLocation,
-  addQuestions,
   onChange
 }) => {
   return (
