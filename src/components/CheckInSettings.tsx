@@ -11,7 +11,6 @@ interface CheckInSettingsProps {
 const CheckInSettings: React.FC<CheckInSettingsProps> = ({
   openCheckIn,
   checkAttendeeLocation,
-  addQuestions,
   onChange
 }) => {
   return (
