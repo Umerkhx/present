@@ -1,4 +1,4 @@
-import "./app.css"
+import "./App.css"
 import { Routes, Route } from "react-router-dom"
 import EventCheckIn from "./create/EventCheckIn"
 import VerificationCode from "./verification-code/VerificationCode"
