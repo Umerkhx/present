@@ -6,7 +6,7 @@ import VerifyCode from "./verify-code/VerifyCode"
 import AccountInfo from "./account-info/AccountInfo"
 import Login from "./login/Login"
 import Dashboard from "./dashboard/Dashboard"
-import EventInfo from "./event-details.tsx/EventInfo"
+import EventInfo from "./event-details/EventInfo"
 import CheckInPage from "./check-in/Checkin"
 
 function App() {
