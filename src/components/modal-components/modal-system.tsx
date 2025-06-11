@@ -41,7 +41,7 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
     const [groupsView, setGroupsView] = useState<GroupsView>("manage")
     const [groupName, setGroupName] = useState("")
     const [hasCustomField, setHasCustomField] = useState(false)
-    const [customFieldName] = useState("New Field")
+    const [customFieldName, setCustomFieldName] = useState("New Field")
     const [selectedImage, setSelectedImage] = useState(profileImages[0]);
     const [formData, setFormData] = useState({
         firstName: "",
@@ -51,7 +51,7 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
         firstName: false,
         lastName: false,
     });
-    const [, setProfileSaved] = useState(false);
+    const [profileSaved, setProfileSaved] = useState(false);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

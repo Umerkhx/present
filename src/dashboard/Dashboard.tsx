@@ -1,4 +1,4 @@
-import { AlignJustify} from 'lucide-react'
+import { AlignJustify } from 'lucide-react'
 import '../App.css'
 import { useState } from 'react';
 
@@ -6,7 +6,7 @@ import ModalSystem from '../components/modal-components/modal-system';
 
 function Dashboard() {
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  
+
 
     return (
         <section className='max-w-screen mx-auto '>
@@ -32,9 +32,9 @@ function Dashboard() {
             </div>
 
 
-       <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
+            <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
 
-        
+
 
             <div className='p-10'>
                 <h1 className='text-3xl font-semibold text-zinc-900'>Welcome Back, Matteo</h1>
@@ -47,11 +47,27 @@ function Dashboard() {
                     </div>
                 </div>
                 <h2 className='text-xl font-semibold text-zinc-900'>Previous Events</h2>
-                <div className='rounded-lg outline-1 outline-black w-full h-64 my-7 flex flex-col'>
-                    <div className='flex-grow flex justify-center flex-col  items-center'>
-                        <p className='font-semibold text-xl text-black'>No Events Yet.  </p>
-                        <p className='text-center font-semibold text-lg'>Create an Event here </p>
+                <div className='grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 px-4'>
+                    
+                    {/* This will be added once the user has created the group accordingly to the groups settings and only 4 will show in a row*/}
+                    <div className='rounded-lg outline-1 outline-gray-300  lg:w-2/4 p-3 my-5 flex flex-col'>
+                        <p className='font-semibold text-xl text-black'>5th Period English 5/9/2025 </p>
+                        <p className=' font-medium text-sm pt-3'>May 9,2025 </p>
+                        <p className=' font-medium text-sm'>By: Matteo Zamboni </p>
+                        <div className='flex flex-grow flex-col  pt-10'>
+                            <div className='border border-t w-full border-gray-50'></div>
+                            <div className='flex items-start gap-4 pt-3 pb-1'>
+                                <div>
+                                    <img className='w-8 h-6' src="/Attendees Icon.png" alt="" />
+                                </div>
+                                <div className='flex justify-between items-center w-full'>
+                                    <div>1 Check-In</div>
+                                    <div> <img className='' src="/Icon.png" alt="" /></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
                 <h2 className='text-xl font-semibold text-zinc-900'>Upcoming Events</h2>
             </div>

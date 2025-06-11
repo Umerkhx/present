@@ -1,7 +1,7 @@
 "use client"
 
 import { AlignJustify, Clock, Copy, Edit, MapPin, Share, Users, X, XIcon } from "lucide-react"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Button } from "../components/ui/button"
 import { Avatar, AvatarFallback } from "../components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog"
@@ -54,9 +54,70 @@ export default function EventInfo() {
         },
     ])
 
+    const isTimeWithinWindow = (time: string) => {
+        if (!time) return false
+
+        const [hours, minutes] = time.split(":").map(Number)
+        const timeInMinutes = hours * 60 + minutes
+
+        const [startHours, startMinutes] = eventData.startTime.split(":").map(Number)
+        const startTimeInMinutes = startHours * 60 + startMinutes
+
+        const [endHours, endMinutes] = eventData.endTime.split(":").map(Number)
+        const endTimeInMinutes = endHours * 60 + endMinutes
+
+        return timeInMinutes >= startTimeInMinutes && timeInMinutes <= endTimeInMinutes
+    }
+
+    const attendanceStats = useMemo(() => {
+        const totalAttendees = attendees.length
+        const validCheckIns = attendees.filter((attendee) => attendee.time && isTimeWithinWindow(attendee.time)).length
+
+        const percentage = totalAttendees > 0 ? Math.round((validCheckIns / totalAttendees) * 100) : 0
+
+        return {
+            total: totalAttendees,
+            checkedIn: validCheckIns,
+            percentage,
+        }
+    }, [attendees, eventData.startTime, eventData.endTime])
+
+   
+    const strokeDashoffset = useMemo(() => {
+        const circumference = 251.2 
+        return circumference - (attendanceStats.percentage / 100) * circumference
+    }, [attendanceStats.percentage])
+
     const handleEventUpdate = (field: string, value: string) => {
         setEventData((prev) => ({ ...prev, [field]: value }))
     }
+
+    const handleAttendeeTimeChange = (attendeeId: number, time: string) => {
+        setAttendees((prev) =>
+            prev.map((a) => {
+                if (a.id === attendeeId) {
+                    return { ...a, time }
+                }
+                return a
+            }),
+        )
+    }
+
+    const getAttendanceStatus = (attendee: any) => {
+        if (!attendee.time) return "No time set"
+        if (isTimeWithinWindow(attendee.time)) return "Attended"
+        return "Not attended"
+    }
+
+    const getStatusColor = (attendee: any) => {
+        if (!attendee.time) return "text-gray-500"
+        if (isTimeWithinWindow(attendee.time)) return "text-green-600"
+        return "text-red-600"
+    }
+
+
+
+
 
     const handleSaveEdit = () => {
         setIsEditModalOpen(false)
@@ -284,7 +345,7 @@ export default function EventInfo() {
                             </div>
                         </div>
 
-                        <div className=" rounded-lg p-6 shadow-sm">
+                        <div className="rounded-lg p-6 shadow-sm bg-white">
                             <div className="flex items-center space-x-6">
                                 <div className="relative">
                                     <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
@@ -304,17 +365,24 @@ export default function EventInfo() {
                                             strokeWidth="8"
                                             fill="none"
                                             strokeDasharray="251.2"
-                                            strokeDashoffset="0"
+                                            strokeDashoffset={strokeDashoffset}
                                             strokeLinecap="round"
+                                            style={{ transition: "stroke-dashoffset 0.5s ease-in-out" }}
                                         />
                                     </svg>
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-2xl font-bold text-gray-900">0%</span>
+                                        <span className="text-2xl font-bold text-gray-900">{attendanceStats.percentage}%</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <p className="font-semibold text-gray-900">0 attendees checked in</p>
-                                    <p className="text-sm text-gray-500">No one has checked-in yet</p>
+                                    <p className="font-semibold text-gray-900">
+                                        {attendanceStats.checkedIn} of {attendanceStats.total} attendees checked in
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        {attendanceStats.checkedIn === 0
+                                            ? "No one has checked-in yet"
+                                            : `${attendanceStats.checkedIn} attendee${attendanceStats.checkedIn > 1 ? "s" : ""} within time window`}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -337,7 +405,7 @@ export default function EventInfo() {
                             </div>
                         </div>
 
-                    
+
                         <div className="bg-white rounded-lg p-6 shadow-sm">
                             <div className="relative h-64 lg:h-80 rounded-lg overflow-hidden">
                                 <iframe
@@ -353,52 +421,56 @@ export default function EventInfo() {
                             </div>
                         </div>
 
-                  
 
-              
-                            <div className="bg-white rounded-lg p-6 shadow-sm">
-                                <div className="flex items-center justify-between mb-6">
-                                    <div>
-                                        <h2 className="text-xl font-semibold text-gray-900">See who's present</h2>
-                                        <p className="text-sm text-gray-500">Event check-ins</p>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => {
-                                                const newAttendee = {
-                                                    id: Date.now(),
-                                                    firstName: "",
-                                                    lastName: "",
-                                                    avatar: "",
-                                                    avatarColor: "bg-gray-500",
-                                                    checkedIn: false,
-                                                    time: "",
-                                                    favoriteBook: "",
-                                                }
-                                                setAttendees((prev) => [...prev, newAttendee])
-                                            }}
-                                        >
-                                            Add Attendee
-                                        </Button>
-                                        <Button variant="ghost" size="sm">
-                                            <Clock className="w-4 h-4" />
-                                        </Button>
-                                    </div>
+
+
+                        <div className="bg-white rounded-lg p-6 shadow-sm">
+                            <div className="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 className="text-xl font-semibold text-gray-900">See who's present</h2>
+                                    <p className="text-sm text-gray-500">Event check-ins</p>
                                 </div>
+                                <div className="flex items-center space-x-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            const newAttendee = {
+                                                id: Date.now(),
+                                                firstName: "",
+                                                lastName: "",
+                                                avatar: "",
+                                                avatarColor: "bg-gray-500",
+                                                checkedIn: false,
+                                                time: "",
+                                                favoriteBook: "",
+                                            }
+                                            setAttendees((prev) => [...prev, newAttendee])
+                                        }}
+                                    >
+                                        Add Attendee
+                                    </Button>
+                                    <Button variant="ghost" size="sm">
+                                        <Clock className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            </div>
 
-                                <div className="space-y-4">
-                                    <div className="block md:hidden space-y-3">
-                                        {attendees.map((attendee) => (
-                                            <div key={attendee.id} className="border rounded-lg p-4 space-y-3">
-                                                <div className="flex items-center justify-between">
-                                                    <Avatar className="w-10 h-10">
-                                                        <AvatarFallback className={`${attendee.avatarColor} text-white text-sm`}>
-                                                            {attendee.firstName.charAt(0)}
-                                                            {attendee.lastName.charAt(0)}
-                                                        </AvatarFallback>
-                                                    </Avatar>
+                            <div className="space-y-4">
+                                <div className="block md:hidden space-y-3">
+                                    {attendees.map((attendee) => (
+                                        <div key={attendee.id} className="border rounded-lg p-4 space-y-3">
+                                            <div className="flex items-center justify-between">
+                                                <Avatar className="w-10 h-10">
+                                                    <AvatarFallback className={`${attendee.avatarColor} text-white text-sm`}>
+                                                        {attendee.firstName.charAt(0)}
+                                                        {attendee.lastName.charAt(0)}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex items-center space-x-2">
+                                                    <span className={`text-xs font-medium ${getStatusColor(attendee)}`}>
+                                                        {getAttendanceStatus(attendee)}
+                                                    </span>
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
@@ -408,9 +480,93 @@ export default function EventInfo() {
                                                         <X className="w-4 h-4" />
                                                     </Button>
                                                 </div>
-                                                <div className="grid grid-cols-2 gap-2">
-                                                    <div>
-                                                        <Label className="text-xs text-gray-500">First Name</Label>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div>
+                                                    <Label className="text-xs text-gray-500">First Name</Label>
+                                                    <Input
+                                                        value={attendee.firstName}
+                                                        onChange={(e) => {
+                                                            setAttendees((prev) =>
+                                                                prev.map((a) => (a.id === attendee.id ? { ...a, firstName: e.target.value } : a)),
+                                                            )
+                                                        }}
+                                                        placeholder="First name"
+                                                        className="text-sm"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <Label className="text-xs text-gray-500">Last Name</Label>
+                                                    <Input
+                                                        value={attendee.lastName}
+                                                        onChange={(e) => {
+                                                            setAttendees((prev) =>
+                                                                prev.map((a) => (a.id === attendee.id ? { ...a, lastName: e.target.value } : a)),
+                                                            )
+                                                        }}
+                                                        placeholder="Last name"
+                                                        className="text-sm"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <Label className="text-xs text-gray-500">Check-in Time</Label>
+                                                <Input
+                                                    type="time"
+                                                    value={attendee.time}
+                                                    onChange={(e) => handleAttendeeTimeChange(attendee.id, e.target.value)}
+                                                    className="text-sm"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label className="text-xs text-gray-500">What is your favorite book?</Label>
+                                                <Input
+                                                    value={attendee.favoriteBook}
+                                                    onChange={(e) => {
+                                                        setAttendees((prev) =>
+                                                            prev.map((a) => (a.id === attendee.id ? { ...a, favoriteBook: e.target.value } : a)),
+                                                        )
+                                                    }}
+                                                    placeholder="Enter favorite book"
+                                                    className="text-sm"
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="hidden md:block overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="border-b border-gray-200">
+                                                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Status</th>
+                                                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Attendee</th>
+                                                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">First Name</th>
+                                                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Last Name</th>
+                                                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Time</th>
+                                                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">
+                                                    What is your favorite book?
+                                                </th>
+                                                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {attendees.map((attendee) => (
+                                                <tr key={attendee.id} className="border-b border-gray-100">
+                                                    <td className="py-4 px-2">
+                                                        <span className={`text-xs font-medium ${getStatusColor(attendee)}`}>
+                                                            {getAttendanceStatus(attendee)}
+                                                        </span>
+                                                    </td>
+                                                    <td className="py-4 px-2">
+                                                        <Avatar className="w-8 h-8">
+                                                            <AvatarFallback className={`${attendee.avatarColor} text-white text-sm`}>
+                                                                {attendee.firstName.charAt(0)}
+                                                                {attendee.lastName.charAt(0) || ""}
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                    </td>
+                                                    <td className="py-4 px-2">
                                                         <Input
                                                             value={attendee.firstName}
                                                             onChange={(e) => {
@@ -419,11 +575,10 @@ export default function EventInfo() {
                                                                 )
                                                             }}
                                                             placeholder="First name"
-                                                            className="text-sm"
+                                                            className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
                                                         />
-                                                    </div>
-                                                    <div>
-                                                        <Label className="text-xs text-gray-500">Last Name</Label>
+                                                    </td>
+                                                    <td className="py-4 px-2">
                                                         <Input
                                                             value={attendee.lastName}
                                                             onChange={(e) => {
@@ -432,132 +587,48 @@ export default function EventInfo() {
                                                                 )
                                                             }}
                                                             placeholder="Last name"
-                                                            className="text-sm"
+                                                            className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
                                                         />
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <Label className="text-xs text-gray-500">Check-in Time</Label>
-                                                    <Input
-                                                        type="time"
-                                                        value={attendee.time}
-                                                        onChange={(e) => {
-                                                            setAttendees((prev) =>
-                                                                prev.map((a) => (a.id === attendee.id ? { ...a, time: e.target.value } : a)),
-                                                            )
-                                                        }}
-                                                        className="text-sm"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <Label className="text-xs text-gray-500">What is your favorite book?</Label>
-                                                    <Input
-                                                        value={attendee.favoriteBook}
-                                                        onChange={(e) => {
-                                                            setAttendees((prev) =>
-                                                                prev.map((a) => (a.id === attendee.id ? { ...a, favoriteBook: e.target.value } : a)),
-                                                            )
-                                                        }}
-                                                        placeholder="Enter favorite book"
-                                                        className="text-sm"
-                                                    />
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="hidden md:block overflow-x-auto">
-                                        <table className="w-full">
-                                            <thead>
-                                                <tr className="border-b border-gray-200">
-                                                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Check-in</th>
-                                                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Attendee</th>
-                                                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">First Name</th>
-                                                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Last Name</th>
-                                                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Time</th>
-                                                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">
-                                                        What is your favorite book?
-                                                    </th>
+                                                    </td>
+                                                    <td className="py-4 px-2">
+                                                        <Input
+                                                            type="time"
+                                                            value={attendee.time}
+                                                            onChange={(e) => handleAttendeeTimeChange(attendee.id, e.target.value)}
+                                                            className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
+                                                        />
+                                                    </td>
+                                                    <td className="py-4 px-2">
+                                                        <Input
+                                                            value={attendee.favoriteBook}
+                                                            onChange={(e) => {
+                                                                setAttendees((prev) =>
+                                                                    prev.map((a) => (a.id === attendee.id ? { ...a, favoriteBook: e.target.value } : a)),
+                                                                )
+                                                            }}
+                                                            placeholder="Enter favorite book"
+                                                            className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
+                                                        />
+                                                    </td>
+                                                    <td className="py-4 px-2">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="w-6 h-6 p-0 rounded-full"
+                                                            onClick={() => setAttendees((prev) => prev.filter((a) => a.id !== attendee.id))}
+                                                        >
+                                                            <X className="w-4 h-4 text-gray-400" />
+                                                        </Button>
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                {attendees.map((attendee) => (
-                                                    <tr key={attendee.id} className="border-b border-gray-100">
-                                                        <td className="py-4 px-2">
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                className="w-6 h-6 p-0 rounded-full"
-                                                                onClick={() => setAttendees((prev) => prev.filter((a) => a.id !== attendee.id))}
-                                                            >
-                                                                <X className="w-4 h-4 text-gray-400" />
-                                                            </Button>
-                                                        </td>
-                                                        <td className="py-4 px-2">
-                                                            <Avatar className="w-8 h-8">
-                                                                <AvatarFallback className={`${attendee.avatarColor} text-white text-sm`}>
-                                                                    {attendee.firstName.charAt(0)}
-                                                                    {attendee.lastName.charAt(0) || ""}
-                                                                </AvatarFallback>
-                                                            </Avatar>
-                                                        </td>
-                                                        <td className="py-4 px-2">
-                                                            <Input
-                                                                value={attendee.firstName}
-                                                                onChange={(e) => {
-                                                                    setAttendees((prev) =>
-                                                                        prev.map((a) => (a.id === attendee.id ? { ...a, firstName: e.target.value } : a)),
-                                                                    )
-                                                                }}
-                                                                placeholder="First name"
-                                                                className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
-                                                            />
-                                                        </td>
-                                                        <td className="py-4 px-2">
-                                                            <Input
-                                                                value={attendee.lastName}
-                                                                onChange={(e) => {
-                                                                    setAttendees((prev) =>
-                                                                        prev.map((a) => (a.id === attendee.id ? { ...a, lastName: e.target.value } : a)),
-                                                                    )
-                                                                }}
-                                                                placeholder="Last name"
-                                                                className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
-                                                            />
-                                                        </td>
-                                                        <td className="py-4 px-2">
-                                                            <Input
-                                                                type="time"
-                                                                value={attendee.time}
-                                                                onChange={(e) => {
-                                                                    setAttendees((prev) =>
-                                                                        prev.map((a) => (a.id === attendee.id ? { ...a, time: e.target.value } : a)),
-                                                                    )
-                                                                }}
-                                                                className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
-                                                            />
-                                                        </td>
-                                                        <td className="py-4 px-2">
-                                                            <Input
-                                                                value={attendee.favoriteBook}
-                                                                onChange={(e) => {
-                                                                    setAttendees((prev) =>
-                                                                        prev.map((a) => (a.id === attendee.id ? { ...a, favoriteBook: e.target.value } : a)),
-                                                                    )
-                                                                }}
-                                                                placeholder="Enter favorite book"
-                                                                className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
+                        </div>
 
-                  
+
                     </div>
 
 
