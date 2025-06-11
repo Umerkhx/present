@@ -4,6 +4,7 @@ import Toggle from './Toggle';
 interface CheckInSettingsProps {
   openCheckIn: boolean;
   checkAttendeeLocation: boolean;
+  addQuestions: boolean;
   onChange: (name: string, value: any) => void;
 }
 
