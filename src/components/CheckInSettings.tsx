@@ -15,29 +15,28 @@ const CheckInSettings: React.FC<CheckInSettingsProps> = ({
 }) => {
   return (
     <div className="space-y-4">
+      <div>
       <div className="flex items-center gap-4">
-        <Toggle
-          enabled={openCheckIn}
-          onChange={(value) => onChange('openCheckIn', value)}
-        />
-        <div>
-          <p className="font-medium text-gray-800">Open check-in</p>
-        </div>
-
+        <Toggle enabled={openCheckIn} onChange={(value) => onChange("openCheckIn", value)} />
+        <p className="font-medium text-gray-800">{openCheckIn ? "Group check-in" : "Open check-in"}</p>
       </div>
-
+      {openCheckIn && (
+        <div className="mt-4 space-y-1">
+        <p className="text-lg font-semibold text-gray-900">2024/25 Freshman English Period 5</p>
+        <p className="pt-2 text-base font-semibold text-gray-900">First Name, Last Name</p>
+        <p className="text-sm font-medium text-gray-900">Group verification</p>
+        </div>
+      )}
+      </div>
       <div className="flex items-center gap-4">
-        <Toggle
-          enabled={checkAttendeeLocation}
-          onChange={(value) => onChange('checkAttendeeLocation', value)}
-        />
-        <div>
-          <p className="font-medium text-gray-800">Check attendee location</p>
-        </div>
-
+      <Toggle
+        enabled={checkAttendeeLocation}
+        onChange={(value) => onChange('checkAttendeeLocation', value)}
+      />
+      <div>
+        <p className="font-medium text-gray-800">Check attendee location</p>
       </div>
-
-      
+      </div>
     </div>
   );
 };

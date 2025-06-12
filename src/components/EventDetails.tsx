@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, Pencil } from 'lucide-react';
 import type { EventData } from '../types';
 
 interface EventDetailsProps {
@@ -13,24 +13,35 @@ interface EventDetailsProps {
 
 const EventDetails: React.FC<EventDetailsProps> = ({ eventData, onChange, creator }) => {
     const formattedDate = format(eventData.date, 'MMM d, yyyy');
-
-
+    const [isEditingName, setIsEditingName] = useState(!eventData.name);
 
     return (
         <div className="mb-6">
             <div className="mb-4">
-                <label htmlFor="eventName" className="block text-lg text-gray-400 font-light mb-1">
-                    Add a name
-                </label>
-                <input
-                    type="text"
-                    id="eventName"
-                    placeholder="Event name"
-                    className="w-full border-b border-gray-300 pb-2 text-gray-800 focus:outline-none focus:border-blue-500 transition-colors"
-                    value={eventData.name}
-                    onChange={(e) => onChange('name', e.target.value)}
-                />
+                {isEditingName ? (
+                    <input
+                        type="text"
+                        id="eventName"
+                        className="w-full border-b border-gray-300 pb-2 text-gray-800 focus:outline-none focus:border-blue-500"
+                        value={eventData.name}
+                        placeholder='Add Name'
+                        onChange={e => onChange('name', e.target.value)}
+                        onBlur={() => eventData.name.trim() && setIsEditingName(false)}
+                        autoFocus
+                    />
+                ) : (
+                    <div className="flex items-center justify-between">
+                        <p className="text-2xl font-semibold text-gray-800">{eventData.name}</p>
+                        <button onClick={() => setIsEditingName(true)}
+                        className="text-sm text-blue-600 hover:underline flex items-center cursor-pointer">
+                        <Pencil size={14} className="mr-1" /> Edit </button>
+                    </div>
+                )}
+                   <label htmlFor="eventName" className="block text-sm text-gray-600 font-medium mt-1">
+                            Event Name
+                        </label>
             </div>
+
 
             <div className="flex items-center gap-3 my-4">
                 <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -74,7 +85,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventData, onChange, creato
                         </div>
                     </div>
                     <div className="w-1/2">
-                      
+
                         <input
                             type="time"
                             id="endTime"
@@ -83,10 +94,10 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventData, onChange, creato
                             onChange={(e) => onChange('endTime', e.target.value)}
                         />
 
-                          <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1">
                             <Clock size={16} className="text-gray-500" />
                             <label htmlFor="endTime" className="text-sm text-gray-700">
-                               Check-in end time
+                                Check-in end time
                             </label>
                         </div>
                     </div>
