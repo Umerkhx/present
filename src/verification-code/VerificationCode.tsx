@@ -1,32 +1,34 @@
-import { AlignJustify, XIcon } from "lucide-react";
-import "../App.css";
-import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../components/ui/input-otp";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
-import { useState } from "react";
+"use client"
+
+import { AlignJustify, X } from "lucide-react"
+import "../App.css"
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../components/ui/input-otp"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog"
+import { useState } from "react"
+import { cn } from "../lib/utils"
 
 function VerificationCode() {
-  const [code, setCode] = useState<string>("");
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [code, setCode] = useState<string>("")
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
 
   //For Backend Dev: This would be replaced with your actual validation logic
   const validateCode = (inputCode: string): boolean => {
     // For demo purposes, let's consider "12345678" as a valid code
-    return inputCode === "12345678";
-  };
+    return inputCode === "12345678"
+  }
 
   const handleCheckIn = () => {
     if (code.length === 8) {
-      const isValid = validateCode(code);
+      const isValid = validateCode(code)
       if (!isValid) {
-        setDialogOpen(true);
+        setDialogOpen(true)
       } else {
         // Handle successful check-in
-        alert("Successfully checked in!");
+        alert("Successfully checked in!")
       }
     }
-  };
-
-  // implement the correct dialog functionality
+  }
 
   return (
     <section className="max-w-screen mx-auto p-5 min-h-screen flex flex-col">
@@ -37,15 +39,25 @@ function VerificationCode() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">
-            Log-in
-          </div>
-          <div className="px-5 py-2 bg-black text-white rounded-lg md:block hidden">
-            Create
-          </div>
-          <div className="rounded-lg p-1.5 border border-gray-400 md:hidden block">
-            <AlignJustify className="w-5 h-5" />
-          </div>
+          <div className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Log-in</div>
+          <div className="px-5 py-2 bg-black text-white rounded-lg md:block hidden">Create</div>
+          <button
+            className="rounded-lg p-1.5 border border-gray-400 md:hidden block relative z-50"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-expanded={mobileMenuOpen}
+            aria-label="Toggle menu"
+          >
+            <div className="relative w-5 h-5 cursor-pointer">
+              <AlignJustify
+                className={cn(
+                  "w-5 h-5 absolute transition-all duration-300 ease-in-out",
+                  mobileMenuOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0",
+                )} />
+              <X className={cn(
+                  "w-5 h-5 absolute transition-all duration-300 ease-in-out",
+                  mobileMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90",)}/>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -59,7 +71,7 @@ function VerificationCode() {
             </p>
 
             <div className="scale-110 lg:scale-175">
-              <InputOTP type="tel" maxLength={8} value={code} onChange={setCode} >
+              <InputOTP type="tel" maxLength={8} value={code} onChange={setCode}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
@@ -76,13 +88,14 @@ function VerificationCode() {
               </InputOTP>
             </div>
 
+            {/* Error Dialog */}
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogContent className="sm:max-w-2xl  lg:h-[600px]">
+              <DialogContent className="sm:max-w-2xl lg:h-[600px]">
                 <DialogHeader>
                   <div className="flex justify-between items-center px-4">
                     <DialogTitle className="text-xl font-semibold">Error with check-in</DialogTitle>
                     <button onClick={() => setDialogOpen(false)} className="text-gray-500 hover:text-gray-700">
-                      <XIcon />
+                      <X />
                     </button>
                   </div>
                 </DialogHeader>
@@ -96,6 +109,41 @@ function VerificationCode() {
                 >
                   Back
                 </button>
+              </DialogContent>
+            </Dialog>
+
+            {/* Mobile Navigation Modal - Positioned at Top */}
+            <Dialog open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <DialogContent className="sm:max-w-md w-[95vw] p-0 m-0 fixed top-4 left-1/2 transform -translate-x-1/2 translate-y-0">
+                <DialogHeader className="p-4 pb-0">
+                  <div className="flex justify-end items-center">
+                   
+                    <button onClick={() => setMobileMenuOpen(false)} className="text-gray-500 hover:text-gray-700 p-1">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </DialogHeader>
+
+                <div className="p-4 space-y-3">
+                  <button
+                    className="w-full px-5 py-3 border border-gray-400 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      setMobileMenuOpen(false)
+                      // Handle login navigation
+                    }}
+                  >
+                    Log-in
+                  </button>
+                  <button
+                    className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gray-800 transition-colors"
+                    onClick={() => {
+                      setMobileMenuOpen(false)
+                      // Handle create navigation
+                    }}
+                  >
+                    Create
+                  </button>
+                </div>
               </DialogContent>
             </Dialog>
           </div>
@@ -122,6 +170,24 @@ function VerificationCode() {
           </div>
         </div>
       </div>
+
+      {/* Custom CSS for top-positioned modal */}
+      <style>{`
+        [data-state="open"][data-radix-collection-item] {
+          animation: slideDownAndFade 0.3s ease-out;
+        }
+        
+        @keyframes slideDownAndFade {
+          from {
+            opacity: 0;
+            transform: translate(-50%, -10px);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, 0);
+          }
+        }
+      `}</style>
     </section>
   )
 }
