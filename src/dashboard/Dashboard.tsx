@@ -9,8 +9,8 @@ function Dashboard() {
 
 
     return (
-        <section className='max-w-screen mx-auto '>
-            <div className="gradient-bar flex flex-wrap items-center justify-between py-16 px-10 gap-y-4">
+        <section className='container mx-auto '>
+            <div className="gradient-bar  flex flex-wrap items-center justify-between py-16 px-10 gap-y-4">
                 <div className="flex items-center gap-2">
                     <img src="/logo.png" width={25} height={25} alt="logo" />
                     <span className="font-semibold text-3xl text-zinc-800">Present</span>
@@ -21,7 +21,7 @@ function Dashboard() {
                     <div className="px-5 py-1.5 bg-zinc-100 text-black border border-gray-400 rounded-lg md:block hidden">
                         Check-In
                     </div>
-                    <button onClick={() => { setDialogOpen(true) }} className="px-6 py-1.5 bg-zinc-950 text-zinc-50 rounded-lg md:block hidden cursor-pointer hover:bg-zinc-800 transition-colors duration-300">
+                    <button onClick={() => { setDialogOpen(true) }} className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-150 duration-150 cursor-pointer">
                         Create
                     </button>
                     <div className="rounded-lg p-1.5 border border-gray-400 md:hidden block">
@@ -36,7 +36,7 @@ function Dashboard() {
 
 
 
-            <div className='p-10'>
+            <div className='p-10 '>
                 <h1 className='text-3xl font-semibold text-zinc-900'>Welcome Back, Matteo</h1>
                 <div className="flex items-center my-8 gap-3">
                     <div className="px-5 py-1.5 bg-transparent text-black  border border-gray-900 rounded-lg ">
@@ -49,8 +49,8 @@ function Dashboard() {
                 <h2 className='text-xl font-semibold text-zinc-900'>Previous Events</h2>
                 <div className='grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 px-4'>
                     
-                    {/* This will be added once the user has created the group accordingly to the groups settings and only 4 will show in a row*/}
-                    <div className='rounded-lg outline-1 outline-gray-300  lg:w-2/4 p-3 my-5 flex flex-col'>
+                    {/* This will be added once the user has created the group accordingly to the groups settings and only 4 will show in a row replace the dummy data with real data*/}
+                    <div className='rounded-lg outline-1 outline-gray-300  xl:w-2/4 p-3 my-5 flex flex-col'>
                         <p className='font-semibold text-xl text-black'>5th Period English 5/9/2025 </p>
                         <p className=' font-medium text-sm pt-3'>May 9,2025 </p>
                         <p className=' font-medium text-sm'>By: Matteo Zamboni </p>

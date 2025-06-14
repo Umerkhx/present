@@ -31,7 +31,7 @@ function VerificationCode() {
   }
 
   return (
-    <section className="max-w-screen mx-auto p-5 min-h-screen flex flex-col">
+    <section className="container mx-auto p-5 min-h-screen flex flex-col">
       <div className="flex flex-wrap items-center justify-between p-4 gap-y-4">
         <div className="flex items-center gap-2">
           <img src="/logo.png" width={25} height={25} alt="logo" />
@@ -40,7 +40,7 @@ function VerificationCode() {
 
         <div className="flex items-center gap-4">
           <div className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Log-in</div>
-          <div className="px-5 py-2 bg-black text-white rounded-lg md:block hidden">Create</div>
+          <button className="px-5 py-2 bg-black text-white rounded-lg md:block hidden focus:bg-gradient-to-r focus:from-[#31CCD6] focus:via-[#66C587] focus:to-[#BBD16B] focus:text-black transition ease-in delay-100 duration-150 cursor-pointer">Create</button>
           <button
             className="rounded-lg p-1.5 border border-gray-400 md:hidden block relative z-50"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

@@ -4,7 +4,7 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../com
 function VerifyCode() {
 
     return (
-        <section className="max-w-screen mx-auto p-5 min-h-screen flex flex-col">
+        <section className="container mx-auto p-5 min-h-screen flex flex-col">
             <div className="flex justify-start items-center px-8 py-5">
                 <div className="flex items-center gap-2">
                     <img src="/Back Arrow.png" width={18} height={18} alt="logo" />
