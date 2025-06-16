@@ -11,6 +11,7 @@ import type { EventData } from "../types"
 import Toggle from "../components/Toggle"
 import { Dialog, DialogContent, DialogHeader } from "../components/ui/dialog"
 import { cn } from "../lib/utils"
+import { Link } from "react-router-dom"
 
 interface Question {
   id: string
@@ -104,11 +105,9 @@ const EventCheckIn: React.FC = () => {
           <span className="font-semibold text-3xl text-zinc-800">Present</span>
         </div>
 
-
-
         <div className="flex items-center gap-4">
-          <div className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Check-In</div>
-          <button className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer">Dashboard</button>
+          <Link to={'/check-in'} className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Check-In</Link>
+          <Link to={'/'} className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer">Dashboard</Link>
           <button
             className="rounded-lg p-1.5 border border-gray-400 md:hidden block relative z-50"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -286,29 +285,23 @@ const EventCheckIn: React.FC = () => {
           <DialogHeader className="p-4 pb-0">
             <div className="flex justify-end items-center">
 
-              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-500 hover:text-gray-700 p-1">
+              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-500 hover:text-gray-700 p-1 cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
           </DialogHeader>
 
-          <div className="p-4 space-y-3">
-            <button
+          <div className="p-4 space-y-3 flex flex-col items-center">
+            <Link to={'/check-in'}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors"
-              onClick={() => {
-                setMobileMenuOpen(false)
-              }}
             >
               Check-In
-            </button>
-            <button
+            </Link>
+            <Link to={'/'}
               className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer"
-              onClick={() => {
-                setMobileMenuOpen(false)
-              }}
             >
               Dashboard
-            </button>
+            </Link>
           </div>
         </DialogContent>
       </Dialog>
