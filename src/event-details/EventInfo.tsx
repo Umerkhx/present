@@ -123,13 +123,6 @@ export default function EventInfo() {
 
 
 
-
-
-    // const handleSaveEdit = () => {
-    //     setIsEditModalOpen(false)
-    //     // for the backend developer: here you would typically save to backend
-    // }
-
     const shareUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/event/5th-period-english`
 
     return (

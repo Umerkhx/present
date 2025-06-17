@@ -8,6 +8,7 @@ import Login from "./login/Login"
 import Dashboard from "./dashboard/Dashboard"
 import EventInfo from "./event-details/EventInfo"
 import CheckInPage from "./check-in/Checkin"
+import SignUp from "./sign-up/SignUp"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/create" element={<EventCheckIn />} />
         <Route path="/verification-code" element={<VerificationCode />} />
         <Route path="/verify-code" element={<VerifyCode />} />

@@ -161,7 +161,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({ onSubmit }) => {
         <button
           type="submit"
           disabled={!phoneNumber.trim()}
-          className="w-full h-12 bg-black text-white font-medium rounded-xl hover:bg-gray-900 transform transition-all focus:outline-none f"
+          className="w-full h-12 bg-black text-white font-medium rounded-xl hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer"
         >
           Send Code
         </button>

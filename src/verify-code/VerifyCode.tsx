@@ -42,13 +42,13 @@ function VerifyCode() {
 
 
                     <div className="max-w-lg mx-auto py-5">
-                          <button className="w-full py-3 bg-black text-zinc-100  font-medium rounded-xl transform transition-all focus:outline-none flex justify-center items-center gap-2">
+                          <button className="w-full py-3 bg-black text-zinc-100  font-medium rounded-xl hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer focus:outline-none flex justify-center items-center gap-2">
                             Verify Code
                         </button>
 
                         <p className="text-lg text-gray-400 my-4"> OR </p>
 
-                        <button className="w-full py-3 bg-transparent border border-gray-400 font-medium rounded-xl transform transition-all focus:outline-none flex justify-center items-center gap-2">
+                        <button className="w-full py-3 bg-transparent border border-gray-400 font-medium rounded-xl transform transition-all cursor-pointer hover:border-gray-700 hover:shadow-lg flex justify-center items-center gap-2">
                             <img src="/google-form.png" width={18} height={18} alt="" /> Continue with Google
                         </button>
                     </div>
