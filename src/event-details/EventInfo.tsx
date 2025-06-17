@@ -7,11 +7,17 @@ import { Avatar, AvatarFallback } from "../components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog"
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
-import { Textarea } from "../components/ui/textarea"
+import { Link } from "react-router-dom"
+import { cn } from "../lib/utils"
+import ModalSystem from "../components/modal-components/modal-system"
 
 export default function EventInfo() {
     const [isShareModalOpen, setIsShareModalOpen] = useState(false)
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    // const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+    const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
+
     const [eventData, setEventData] = useState({
         name: "5th Period English 5/9/2025",
         date: "2025-05-09",
@@ -82,9 +88,9 @@ export default function EventInfo() {
         }
     }, [attendees, eventData.startTime, eventData.endTime])
 
-   
+
     const strokeDashoffset = useMemo(() => {
-        const circumference = 251.2 
+        const circumference = 251.2
         return circumference - (attendanceStats.percentage / 100) * circumference
     }, [attendanceStats.percentage])
 
@@ -119,15 +125,15 @@ export default function EventInfo() {
 
 
 
-    const handleSaveEdit = () => {
-        setIsEditModalOpen(false)
-        // for the backend developer: here you would typically save to backend
-    }
+    // const handleSaveEdit = () => {
+    //     setIsEditModalOpen(false)
+    //     // for the backend developer: here you would typically save to backend
+    // }
 
     const shareUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/event/5th-period-english`
 
     return (
-        <div className="min-h-screen xl:max-w-screen-7xl lg:max-w-screen-2xl md:max-screen-xl sm:max-w-screen-lg max-w-screen-md mx-auto ">
+        <section className="min-h-screen xl:max-w-screen-7xl lg:max-w-screen-2xl md:max-screen-xl sm:max-w-screen-lg max-w-screen-md mx-auto ">
 
             <header className=" px-4 py-5 lg:px-8">
                 <div className="flex items-center justify-between  mx-auto">
@@ -136,16 +142,27 @@ export default function EventInfo() {
                         <span className="text-2xl font-semibold text-black">present</span>
                     </div>
 
-                    <div className="flex items-center space-x-3">
-                        <Button variant="outline" size="sm" className="hidden sm:inline-flex">
-                            Check-in
-                        </Button>
-                        <Button variant="outline" size="sm" className="hidden sm:inline-flex">
-                            Dashboard
-                        </Button>
-                        <div className="rounded-lg p-1.5 border border-gray-400 md:hidden block">
-                            <AlignJustify className="w-5 h-5" />
-                        </div>
+                    <div className="flex items-center gap-4">
+                        <Link to={'/check-in'} className="px-5 py-1.5 border border-gray-400 rounded-lg md:block hidden">Check-In</Link>
+                        <Link to={'/'} className="px-5 py-1.5 bg-transparent border border-gray-400 text-black rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer">Dashboard</Link>
+                        <button
+                            className="rounded-lg p-1.5 border border-gray-400 md:hidden block relative z-50"
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            aria-expanded={mobileMenuOpen}
+                            aria-label="Toggle menu"
+                        >
+                            <div className="relative w-5 h-5 cursor-pointer">
+                                <AlignJustify
+                                    className={cn(
+                                        "w-5 h-5 absolute transition-all duration-300 ease-in-out",
+                                        mobileMenuOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0",
+                                    )} />
+                                <X className={cn(
+                                    "w-5 h-5 absolute transition-all duration-300 ease-in-out",
+                                    mobileMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90",)} />
+                            </div>
+
+                        </button>
                         <img className="rounded-full w-10 h-10 object-cover" src="/profile.png" alt="profile" />
                     </div>
                 </div>
@@ -254,12 +271,17 @@ export default function EventInfo() {
                                         </DialogContent>
                                     </Dialog>
 
+
+                                    <Button onClick={() => { setDialogOpen(true) }} variant="outline" size="sm" className="flex items-center space-x-2 cursor-pointer">
+                                        <Edit className="w-4 h-4" />
+                                        <span>Edit</span>
+                                    </Button>
+                                    
+                                    <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
+
+                                    {/* 
                                     <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
                                         <DialogTrigger asChild>
-                                            <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                                                <Edit className="w-4 h-4" />
-                                                <span>Edit</span>
-                                            </Button>
                                         </DialogTrigger>
                                         <DialogContent className="sm:max-w-lg">
                                             <DialogHeader>
@@ -327,7 +349,7 @@ export default function EventInfo() {
                                                 </div>
                                             </div>
                                         </DialogContent>
-                                    </Dialog>
+                                    </Dialog> */}
 
                                     <Button variant="outline" size="sm" className="flex items-center space-x-2">
                                         <Copy className="w-4 h-4" />
@@ -634,6 +656,51 @@ export default function EventInfo() {
 
                 </div>
             </main>
-        </div>
+
+            {/*Mobile Menu*/}
+            <style>{`
+                    [data-state="open"][data-radix-collection-item] {
+                      animation: slideDownAndFade 0.3s ease-out;
+                    }
+                    
+                    @keyframes slideDownAndFade {
+                      from {
+                        opacity: 0;
+                        transform: translate(-50%, -10px);
+                      }
+                      to {
+                        opacity: 1;
+                        transform: translate(-50%, 0);
+                      }
+                    }
+                  `}</style>
+
+
+            <Dialog open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <DialogContent className="sm:max-w-md w-[95vw] p-0 m-0 fixed top-4 left-1/2 transform -translate-x-1/2 translate-y-0">
+                    <DialogHeader className="p-4 pb-0">
+                        <div className="flex justify-end items-center">
+
+                            <button onClick={() => setMobileMenuOpen(false)} className="text-gray-500 hover:text-gray-700 p-1 cursor-pointer">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </DialogHeader>
+
+                    <div className="p-4 space-y-3 flex flex-col items-center">
+                        <Link to={'/check-in'}
+                            className="w-full px-5 py-3 border border-gray-400 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors"
+                        >
+                            Check-In
+                        </Link>
+                        <Link to={'/'}
+                            className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer"
+                        >
+                            Dashboard
+                        </Link>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </section>
     )
 }
