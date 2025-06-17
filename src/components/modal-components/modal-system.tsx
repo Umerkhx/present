@@ -198,7 +198,7 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="xl:max-w-3xl md:max-w-3xl sm:max-w-2xl max-w-[95vw] max-h-[90vh] overflow-y-auto py-6 px-3">
+            <DialogContent className="xl:max-w-5xl md:max-w-3xl sm:max-w-2xl max-w-[95vw] max-h-[90vh] overflow-y-auto py-6 px-3">
                 <DialogHeader className="">
                     <div className="flex justify-between items-center p-4">
                         <div className="flex items-center gap-1">

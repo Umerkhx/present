@@ -71,7 +71,7 @@ function VerificationCode() {
               Enter your event code or scan a QR to check-in.
             </p>
 
-            <div className="scale-110 lg:scale-150">
+            <div className="scale-110 lg:scale-175">
               <InputOTP type="tel" maxLength={8} value={code} onChange={setCode}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />

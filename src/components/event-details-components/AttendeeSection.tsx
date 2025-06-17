@@ -24,12 +24,12 @@ interface AttendeesSectionProps {
   getStatusColor: (attendee: Attendee) => string;
 }
 
-export default function AttendeesSection({ 
-  attendees, 
-  setAttendees, 
-  handleAttendeeTimeChange, 
-  getAttendanceStatus, 
-  getStatusColor 
+export default function AttendeesSection({
+  attendees,
+  setAttendees,
+  handleAttendeeTimeChange,
+  getAttendanceStatus,
+  getStatusColor
 }: AttendeesSectionProps) {
   const addAttendee = () => {
     const newAttendee = {
@@ -145,7 +145,8 @@ export default function AttendeesSection({
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Status</th>
+                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Check-In</th>
+                {/* <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Actions</th> */}
                 <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Attendee</th>
                 <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">First Name</th>
                 <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Last Name</th>
@@ -153,17 +154,26 @@ export default function AttendeesSection({
                 <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">
                   What is your favorite book?
                 </th>
-                <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Actions</th>
               </tr>
             </thead>
             <tbody>
               {attendees.map((attendee) => (
                 <tr key={attendee.id} className="border-b border-gray-100">
                   <td className="py-4 px-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-6 h-6 p-0 rounded-full"
+                      onClick={() => removeAttendee(attendee.id)}
+                    >
+                      <X className="w-4 h-4 text-gray-400" />
+                    </Button>
+                  </td>
+                  {/* <td className="py-4 px-2">
                     <span className={`text-xs font-medium ${getStatusColor(attendee)}`}>
                       {getAttendanceStatus(attendee)}
                     </span>
-                  </td>
+                  </td> */}
                   <td className="py-4 px-2">
                     <Avatar className="w-8 h-8">
                       <AvatarFallback className={`${attendee.avatarColor} text-white text-sm`}>
@@ -204,16 +214,7 @@ export default function AttendeesSection({
                       className="text-sm border-0 bg-transparent focus:bg-white focus:border focus:border-gray-300"
                     />
                   </td>
-                  <td className="py-4 px-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-6 h-6 p-0 rounded-full"
-                      onClick={() => removeAttendee(attendee.id)}
-                    >
-                      <X className="w-4 h-4 text-gray-400" />
-                    </Button>
-                  </td>
+
                 </tr>
               ))}
             </tbody>

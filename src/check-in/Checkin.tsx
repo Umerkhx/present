@@ -25,7 +25,7 @@ export default function CheckInPage() {
 
     const [checkInDate, setCheckInDate] = useState(new Date())
     const [checkInStartTime, setCheckInStartTime] = useState("12:00")
-    const [checkInEndTime, setCheckInEndTime] = useState("13:00")
+    const [checkInEndTime, setCheckInEndTime] = useState("14:00")
 
     const eventData = {
         name: "5th Period English 5/9/2025",
@@ -49,9 +49,9 @@ export default function CheckInPage() {
         const start = parseInt(checkInStartTime.split(":")[0]) * 60 + parseInt(checkInStartTime.split(":")[1])
         const end = parseInt(checkInEndTime.split(":")[0]) * 60 + parseInt(checkInEndTime.split(":")[1])
 
-        if (currentTime < start || currentTime > end) {
-            newErrors.push("You are trying to check in outside of the allowed time window.")
-        }
+        // if (currentTime > start || currentTime > end) {
+        //     newErrors.push("You are trying to check in outside of the allowed time window.")
+        // }
 
         return newErrors
     }

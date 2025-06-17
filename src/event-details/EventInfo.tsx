@@ -111,13 +111,13 @@ export default function EventInfo() {
     }
 
     return (
-        <section className=" xl:max-w-screen-5xl lg:max-w-screen-2xl md:max-screen-xl sm:max-w-screen-lg max-w-screen-md mx-auto">
+        <section className=" xl:max-w-screen-7xl lg:max-w-screen-2xl md:max-screen-xl sm:max-w-screen-lg max-w-screen-md mx-auto">
             <EventHeader 
                 mobileMenuOpen={mobileMenuOpen} 
                 setMobileMenuOpen={setMobileMenuOpen} 
             />
 
-            <main className="max-w-4xl mx-auto px-4 py-6 lg:px-8">
+            <main className="max-w-6xl mx-auto px-4 py-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-6">
                     <div className="lg:col-span-2 space-y-6">
                         <EventInformation 

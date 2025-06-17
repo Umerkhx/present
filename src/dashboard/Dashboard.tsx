@@ -65,6 +65,14 @@ function Dashboard() {
                     </div>
                 </div>
                 <h2 className='text-xl font-semibold text-zinc-900'>Previous Events</h2>
+
+                {/* <div className='w-full rounded-xl h-60 border border-black mt-5'>
+                    <div className='flex flex-col mt-20 justify-center items-center gap-2 '>
+                        <h3 className='text-xl font-semibold'>No Events Yet</h3>
+                        <h4 className='text-lg font-semibold -mt-2'>Create an event here</h4>
+                    </div>
+                </div> */}
+
                 <div className='grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 px-4'>
 
                     {/* This will be added once the user has created the group accordingly to the groups settings and only 4 will show in a row replace the dummy data with real data*/}

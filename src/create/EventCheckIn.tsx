@@ -1,6 +1,6 @@
 "use client"
 
-import { AlignJustify, X, Edit2 } from "lucide-react"
+import { AlignJustify, X, Edit2, Share, XIcon, Copy, Edit } from "lucide-react"
 import type React from "react"
 import { useState, useEffect } from "react"
 import EventDetails from "../components/EventDetails"
@@ -9,9 +9,12 @@ import CheckInSettings from "../components/CheckInSettings"
 import ActionButton from "../components/ActionButton"
 import type { EventData } from "../types"
 import Toggle from "../components/Toggle"
-import { Dialog, DialogContent, DialogHeader } from "../components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog"
 import { cn } from "../lib/utils"
 import { Link } from "react-router-dom"
+import { Button } from "../components/ui/button"
+import { Label } from "../components/ui/label"
+import { Input } from "../components/ui/input"
 
 interface Question {
   id: string
@@ -22,6 +25,9 @@ interface Question {
 }
 
 const EventCheckIn: React.FC = () => {
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const shareUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/event/5th-period-english`;
+
   const [eventData, setEventData] = useState<EventData>({
     name: "",
     date: new Date(),
@@ -106,6 +112,7 @@ const EventCheckIn: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4">
+          <button className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden" onClick={() => setIsShareModalOpen(true)}>Open Qr Code</button>
           <Link to={'/check-in'} className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Check-In</Link>
           <Link to={'/'} className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer">Dashboard</Link>
           <button
@@ -305,6 +312,63 @@ const EventCheckIn: React.FC = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+
+
+          <div className="flex flex-wrap gap-2 pt-4">
+          <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
+            <DialogTrigger asChild>
+              {/* <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                <Share className="w-4 h-4" />
+                <span>Share</span>
+              </Button> */}
+            </DialogTrigger>
+            <DialogContent className="lg:-mt-28 md:max-w-xl lg:h-[550px]">
+              <DialogHeader>
+                <div className="flex items-center justify-between">
+                  <DialogTitle>{eventData.name}</DialogTitle>
+                  <Button onClick={() => setIsShareModalOpen(false)} variant="outline" size="sm" className="bg-transparent border-none flex items-center space-x-2">
+                    <XIcon className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex justify-center items-center py-5">
+                  <img className="w-52 h-52" width={200} height={200} src="/qr-code.png" alt="qrcode" />
+                </div>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="share-url" className="font-semibold text-md pl-2">Event Link</Label>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <Input id="share-url" value={shareUrl} readOnly className="flex-1" />
+                    <Button size="sm" onClick={() => navigator.clipboard.writeText(shareUrl)}>
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="share-code" className="font-semibold text-md pl-2">Event Code</Label>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <Input id="share-code" value={'GHK4-P091'} readOnly className="flex-1" />
+                    <Button size="sm">
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex justify-center space-x-2">
+                  <Button variant="outline" size="sm" className="bg-black text-white w-2/4 py-1.5 hover:bg-gray-900 hover:text-white">
+                    See Event Details
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+      
+          
+
+       
+  
+        </div>
     </section>
   )
 }
