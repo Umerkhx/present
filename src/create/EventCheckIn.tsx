@@ -1,6 +1,6 @@
 "use client"
 
-import { AlignJustify, X, Edit2, Share, XIcon, Copy, Edit } from "lucide-react"
+import { AlignJustify, X, Edit2, XIcon, Copy } from "lucide-react"
 import type React from "react"
 import { useState, useEffect } from "react"
 import EventDetails from "../components/EventDetails"
