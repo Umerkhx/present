@@ -6,6 +6,7 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../com
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog"
 import { useState } from "react"
 import { cn } from "../lib/utils"
+import { Link } from "react-router-dom"
 
 function VerificationCode() {
   const [code, setCode] = useState<string>("")
@@ -39,8 +40,8 @@ function VerificationCode() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Log-in</div>
-          <button className="px-5 py-2 bg-black text-white rounded-lg md:block hidden focus:bg-gradient-to-r focus:from-[#31CCD6] focus:via-[#66C587] focus:to-[#BBD16B] focus:text-black transition ease-in delay-100 duration-150 cursor-pointer">Create</button>
+          <Link to={'/login'} className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Log-in</Link>
+          <Link to={'/'} className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer ">Create</Link>
           <button
             className="rounded-lg p-1.5 border border-gray-400 md:hidden block relative z-50"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -104,7 +105,7 @@ function VerificationCode() {
                   <p className="text-sm text-gray-600">Please contact the event organizer for more info</p>
                 </div>
                 <button
-                  className="mx-auto w-2/4 h-10 bg-black text-white rounded-md py-2"
+                  className="mx-auto w-2/4 h-10 bg-black text-white rounded-md py-2 cursor-pointer hover:shadow-xl"
                   onClick={() => setDialogOpen(false)}
                 >
                   Back
@@ -124,25 +125,17 @@ function VerificationCode() {
                   </div>
                 </DialogHeader>
 
-                <div className="p-4 space-y-3">
-                  <button
+                <div className="flex flex-col justify-center p-4 space-y-3">
+                  <Link to={'/login'}
                     className="w-full px-5 py-3 border border-gray-400 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors"
-                    onClick={() => {
-                      setMobileMenuOpen(false)
-                      // Handle login navigation
-                    }}
                   >
                     Log-in
-                  </button>
-                  <button
-                    className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gray-800 transition-colors"
-                    onClick={() => {
-                      setMobileMenuOpen(false)
-                      // Handle create navigation
-                    }}
+                  </Link>
+                  <Link to={'/'}
+                    className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer"
                   >
                     Create
-                  </button>
+                  </Link>
                 </div>
               </DialogContent>
             </Dialog>
@@ -150,11 +143,11 @@ function VerificationCode() {
 
           <div className="max-w-xl mx-auto">
             <div className="flex lg:flex-row flex-col justify-center items-center gap-2">
-              <button className="w-full lg:w-1/3 py-3 bg-transparent border border-gray-400 font-medium rounded-xl transform transition-all focus:outline-none flex justify-center items-center gap-2">
+              <button className="w-full lg:w-1/3 py-3 bg-transparent border border-gray-400 font-medium rounded-xl transform transition-all hover:border-gray-700 hover:shadow-xl cursor-pointer flex justify-center items-center gap-2">
                 Scan QR Code
               </button>
               <button
-                className="w-full lg:w-2/3 py-3 bg-black text-zinc-100 text-lg font-medium rounded-xl transform transition-all focus:outline-none flex justify-center items-center gap-2"
+                className="w-full lg:w-2/3 py-3 bg-black text-zinc-100 text-lg font-medium rounded-xl hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer flex justify-center items-center gap-2"
                 onClick={handleCheckIn}
               >
                 Check-In
