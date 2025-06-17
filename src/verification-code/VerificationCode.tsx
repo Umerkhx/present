@@ -64,14 +64,14 @@ function VerificationCode() {
 
       <div className="flex-grow flex items-center justify-center">
         <div className="p-5 w-full text-center">
-          <h1 className="lg:text-7xl text-3xl font-semibold text-zinc-800">Let's Mark you Present</h1>
+          <h1 className="lg:text-5xl text-3xl font-semibold text-zinc-800">Let's Mark you Present</h1>
 
           <div className="flex flex-col mx-auto items-center gap-4 my-8">
             <p className="text-center text-xl my-2 text-zinc-900 font-medium">
               Enter your event code or scan a QR to check-in.
             </p>
 
-            <div className="scale-110 lg:scale-175">
+            <div className="scale-110 lg:scale-150">
               <InputOTP type="tel" maxLength={8} value={code} onChange={setCode}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
@@ -89,7 +89,7 @@ function VerificationCode() {
               </InputOTP>
             </div>
 
-            {/* Error Dialog */}
+            {/* Error dialog will show if the verification code is not correct */}
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogContent className="sm:max-w-2xl lg:h-[600px]">
                 <DialogHeader>
