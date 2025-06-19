@@ -24,9 +24,9 @@ function Dashboard() {
 
                 <div className="flex items-center gap-4">
                     <Link to={'/check-in'} className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Check-In</Link>
-                    <button onClick={() => { setDialogOpen(true) }} className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-150 duration-150 cursor-pointer">
+                    <Link to={'/create'} className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-150 duration-150 cursor-pointer">
                         Create
-                    </button>
+                    </Link>
                     <button
                         className="rounded-lg p-1.5 border border-gray-400 md:hidden block relative z-50"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -45,7 +45,9 @@ function Dashboard() {
                         </div>
 
                     </button>
+                    <button className='cursor-pointer' onClick={() => { setDialogOpen(true) }}>
                     <img className="rounded-full w-10 h-10 object-cover" src="/profile.png" alt="profile" />
+                    </button>
                 </div>
             </div>
 

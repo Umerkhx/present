@@ -1,19 +1,162 @@
+"use client"
 
-export default function SubscriptionPanel() {
-    return (
-        <div className="p-4">
-            <h3 className="text-xl sm:text-2xl font-semibold mt-4">Dummy Subscription Section</h3>
-            <div className="mt-6 space-y-4">
-                <div className="border rounded-md p-4">
-                    <h4 className="font-semibold mb-2">Current Plan</h4>
-                    <p className="text-gray-600 text-sm">Free Plan - 1 Group Limit</p>
-                </div>
-                <div className="border rounded-md p-4">
-                    <h4 className="font-semibold mb-2">Upgrade Options</h4>
-                    <p className="text-gray-600 text-sm">Unlock unlimited groups and features</p>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2 text-sm">Upgrade Now</button>
-                </div>
-            </div>
+import { Dot } from "lucide-react"
+
+type SubscriptionPlan = "free" | "plus" | "pro"
+
+interface SubscriptionPanelProps {
+  currentPlan: SubscriptionPlan
+  onUpgrade: (plan: SubscriptionPlan) => void
+  onDowngrade: (plan: SubscriptionPlan) => void
+}
+
+export default function SubscriptionPanel({ currentPlan, onUpgrade,onDowngrade }: SubscriptionPanelProps) {
+  const getPlanDisplayName = (plan: SubscriptionPlan) => {
+    switch (plan) {
+      case "free":
+        return "Present Free"
+      case "plus":
+        return "Present Plus"
+      case "pro":
+        return "Present Pro"
+    }
+  }
+
+  return (
+    <div className="p-4">
+      <h3 className="text-xl sm:text-2xl font-semibold mt-2">
+        You are currently on the {getPlanDisplayName(currentPlan)} Plan
+      </h3>
+      <h3 className="text-lg sm:text-xl font-medium mt-2">Upgrade today to access more features</h3>
+      <div className="grid lg:grid-cols-3 grid-cols-1 gap-4 mt-3">
+        <div>
+          <div
+            className={`border rounded-lg p-4 lg:h-80 ${currentPlan === "free" ? "border-gray-500 " : "border-gray-400"}`}
+          >
+            <h4 className="font-semibold mb-2 text-left">Present Free</h4>
+            <p className="text-gray-900 text-left">$0 / Month</p>
+            <ul className="text-zinc-950 font-medium mt-4">
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> Unlimited Events
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> Unlimited Check-ins
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> 1 Group
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> 24 members per group
+              </li>
+            </ul>
+          </div>
+          <button
+            className={`cursor-pointer border rounded-lg px-4 py-1.5 text-center mt-2 w-full ${
+              currentPlan === "free" ? "border-gray-400 text-black" : "border-gray-400"
+            }`}
+            onClick={() => currentPlan !== "free" && onDowngrade("free")}
+            disabled={currentPlan === "free"}
+          >
+            {currentPlan === "free" ? "Your Plan" : "Downgrade"}
+          </button>
         </div>
-    );
+
+        <div>
+          <div
+            className={`border rounded-lg p-4 lg:h-80 ${currentPlan === "plus" ? "border-gray-500 " : "border-gray-400"}`}
+          >
+            <h4 className="font-semibold mb-2 text-left">Present Plus</h4>
+            <p className="text-gray-900 text-left">$12 / Month</p>
+            <ul className="text-zinc-950 font-medium mt-4">
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> Unlimited Events
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> Unlimited Check-ins
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> 5 Groups
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> 100 members per group
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> Export check-in data
+              </li>
+            </ul>
+          </div>
+          <button
+            className={`cursor-pointer rounded-lg px-4 py-1.5 text-center mt-2 w-full transition-all ${
+              currentPlan === "plus"
+                ? "border border-gray-400 text-black"
+                : "bg-black hover:bg-zinc-900 text-white border border-gray-400"
+            }`}
+            onClick={() => currentPlan !== "plus" && onUpgrade("plus")}
+            disabled={currentPlan === "plus"}
+          >
+            {currentPlan === "plus" ? "Your Plan" : "Upgrade"}
+          </button>
+        </div>
+
+        <div>
+          <div
+            className={`border rounded-lg p-4 lg:h-80 ${currentPlan === "pro" ? "border-gray-500 " : "border-gray-400"}`}
+          >
+            <h4 className="font-semibold mb-2 text-left">Present Pro</h4>
+            <p className="text-gray-900 text-left">$25 / Month</p>
+            <ul className="text-zinc-950 font-medium mt-4">
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> Unlimited Events
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> Unlimited Check-ins
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> 10 Groups
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> 300 members per group
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> 4 account admins
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> export check-in data
+              </li>
+              <li className="flex justify-start">
+                {" "}
+                <Dot /> export group data{" "}
+              </li>
+            </ul>
+          </div>
+          <button
+            className={`cursor-pointer rounded-lg px-4 py-1.5 text-center mt-2 w-full transition-all ${
+              currentPlan === "pro"
+                ? "border border-gray-400 text-black"
+                : "bg-black hover:bg-zinc-900 text-white border border-gray-400"
+            }`}
+            onClick={() => currentPlan !== "pro" && onUpgrade("pro")}
+            disabled={currentPlan === "pro"}
+          >
+            {currentPlan === "pro" ? "Your Plan" : "Upgrade"}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
 }
