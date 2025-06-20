@@ -45,7 +45,6 @@ export default function GroupDetails({
   setMembers,
   onSaveGroup,
   onBackToManage,
-  currentPlan,
   limits,
 }: GroupDetailsProps) {
   const [isEditing, setIsEditing] = useState(false)
