@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X, Edit2 } from "lucide-react"
+import { X, Edit2, PencilIcon } from "lucide-react"
 import { Input } from "../ui/input"
 import { Avatar, AvatarFallback } from "../ui/avatar"
 
@@ -27,11 +27,21 @@ interface TeamMember {
 interface AdminProps {
   currentPlan: SubscriptionPlan
   limits: SubscriptionLimits
+  onTeamSave?: (
+    teamName: string,
+    accountOwner: {
+      firstName: string
+      lastName: string
+      role: string
+      initials: string
+      bgColor: string
+    },
+  ) => void
 }
 
 type ViewMode = "initial" | "edit" | "saved"
 
-export default function Admin({ currentPlan }: AdminProps) {
+export default function Admin({ currentPlan,  onTeamSave }: AdminProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("initial")
   const [teamName, setTeamName] = useState("Your superb team")
   const [isEditingOwner, setIsEditingOwner] = useState(false)
@@ -135,6 +145,17 @@ export default function Admin({ currentPlan }: AdminProps) {
 
     setSavedAdmins(completedAdmins)
     setViewMode("saved")
+
+    // Notify parent component about team save
+    if (onTeamSave) {
+      onTeamSave(teamName, {
+        firstName: accountOwner.firstName,
+        lastName: accountOwner.lastName,
+        role: accountOwner.role,
+        initials: accountOwner.initials,
+        bgColor: accountOwner.bgColor,
+      })
+    }
   }
 
   const handleEditTeam = () => {
@@ -187,7 +208,7 @@ export default function Admin({ currentPlan }: AdminProps) {
         {/* Account Owner Row */}
         <div className="flex items-center gap-4 py-4 mt-4">
           <Avatar className="w-10 h-10">
-           <img className="w-10 h-10" src="/profile.png" alt="" />
+            <img className="w-10 h-10" src="/profile.png" alt="" />
           </Avatar>
           <div className="flex-1 grid grid-cols-4 gap-4">
             <Input
@@ -295,7 +316,7 @@ export default function Admin({ currentPlan }: AdminProps) {
           {/* Account Owner */}
           <div className="flex items-center gap-4 py-3">
             <Avatar className="w-10 h-10">
-           <img className="w-10 h-10" src="/profile.png" alt="" />
+              <img className="w-10 h-10" src="/profile.png" alt="" />
             </Avatar>
             <div className="flex-1 grid grid-cols-4 gap-4">
               <span className="text-sm font-medium">{accountOwner.firstName}</span>
@@ -351,14 +372,19 @@ export default function Admin({ currentPlan }: AdminProps) {
               autoFocus
             />
           ) : (
-            <h4 className="text-lg font-semibold">{teamName}</h4>
+            <div className="flex items-center gap-6">
+              <h4 className="text-lg font-semibold">{teamName}</h4>
+              <button onClick={() => setIsEditingOwner(true)}>
+                <PencilIcon className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer" />
+              </button>
+            </div>
           )}
         </div>
 
         {/* Account Owner Row - Editable */}
         <div className="flex items-center gap-4 py-3">
           <Avatar className="w-10 h-10">
-          <img className="w-10 h-10" src="/profile.png" alt="" />
+            <img className="w-10 h-10" src="/profile.png" alt="" />
           </Avatar>
           <div className="flex-1 grid grid-cols-4 gap-4">
             {isEditingOwner ? (
@@ -397,6 +423,9 @@ export default function Admin({ currentPlan }: AdminProps) {
               </>
             )}
           </div>
+          <button onClick={() => setIsEditingOwner(true)}>
+            <PencilIcon className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer" />
+          </button>
         </div>
 
         {/* Action Buttons */}
@@ -418,12 +447,6 @@ export default function Admin({ currentPlan }: AdminProps) {
             </>
           ) : (
             <>
-              <button
-                onClick={() => setIsEditingOwner(true)}
-                className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm"
-              >
-                Edit Info
-              </button>
               <button
                 onClick={handleEditTeam}
                 className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm"

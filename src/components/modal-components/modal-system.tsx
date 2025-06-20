@@ -11,9 +11,11 @@ import ModalGroup from "./ModalGroup"
 import EditProfile from "./EditProfile"
 import Admin from "./Admin"
 import SubscriptionPanel from "./SubscriptionPanel"
+import GroupDetails from "./group-details"
+import GroupInvitationDialog from "./group-invitation-dialog"
 
 type ActiveTab = "profile" | "admin" | "groups" | "subscription"
-type GroupsView = "manage" | "add" | "modal"
+type GroupsView = "manage" | "add" | "modal" | "details"
 type SubscriptionPlan = "free" | "plus" | "pro"
 
 interface Member {
@@ -21,6 +23,14 @@ interface Member {
   initials: string
   firstName: string
   lastName: string
+  bgColor: string
+}
+
+interface TeamMember {
+  firstName: string
+  lastName: string
+  role: string
+  initials: string
   bgColor: string
 }
 
@@ -77,10 +87,7 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
   const [groupsView, setGroupsView] = useState<GroupsView>("manage")
   const [groupName, setGroupName] = useState("")
   const [selectedImage, setSelectedImage] = useState(profileImages[0])
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-  })
+  const [formData, setFormData] = useState({ firstName: "", lastName: "" })
   const [, setProfileSaved] = useState(false)
   const [createdGroups, setCreatedGroups] = useState<
     Array<{
@@ -100,6 +107,15 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
   // Subscription state
   const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>("free")
   const currentLimits = subscriptionLimits[currentPlan]
+
+  // Group invitation dialog state
+  const [showInvitationDialog, setShowInvitationDialog] = useState(false)
+  const [savedTeamData, setSavedTeamData] = useState<{
+    teamName: string
+    accountOwner: TeamMember
+  } | null>(null)
+
+  const [viewingGroupId, setViewingGroupId] = useState<string | null>(null)
 
   const handleProfileSubmit = () => {
     const { firstName, lastName } = formData
@@ -135,6 +151,19 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
     setCreatedGroups((prev) => prev.filter((group) => group.id !== groupId))
   }
 
+  const handleViewGroupDetails = (groupId: string) => {
+    const group = createdGroups.find((g) => g.id === groupId)
+    if (group) {
+      setViewingGroupId(groupId)
+      setGroupsView("details")
+    }
+  }
+
+  const handleBackToManage = () => {
+    setViewingGroupId(null)
+    setGroupsView("manage")
+  }
+
   const handleSaveGroup = () => {
     if (groupName.trim()) {
       const memberCount = members.filter((m) => m.firstName && m.lastName).length
@@ -162,16 +191,32 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
     }
   }
 
+  // Handle team save from Admin component
+  const handleTeamSave = (teamName: string, accountOwner: TeamMember) => {
+    setSavedTeamData({ teamName, accountOwner })
+  }
+
+  // Handle modal close - show invitation dialog if team was saved
+  const handleModalClose = (isOpen: boolean) => {
+    if (!isOpen && savedTeamData) {
+      // Modal is closing and we have saved team data
+      setOpen(false)
+      setTimeout(() => {
+        setShowInvitationDialog(true)
+      }, 300) // Small delay to ensure modal is closed first
+    } else {
+      setOpen(isOpen)
+    }
+  }
+
   const handleUpgrade = (plan: SubscriptionPlan) => {
     setCurrentPlan(plan)
-    // Here you would typically handle the actual payment/upgrade process
     console.log(`Upgraded to ${plan} plan`)
   }
 
   const handleDowngrade = (plan: SubscriptionPlan) => {
     setCurrentPlan(plan)
-    // Here you would typically handle the actual payment/upgrade process
-    console.log(`Upgraded to ${plan} plan`)
+    console.log(`Downgraded to ${plan} plan`)
   }
 
   const renderContent = () => {
@@ -187,7 +232,7 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
           />
         )
       case "admin":
-        return <Admin currentPlan={currentPlan} limits={currentLimits} />
+        return <Admin currentPlan={currentPlan} limits={currentLimits} onTeamSave={handleTeamSave} />
       case "groups":
         switch (groupsView) {
           case "manage":
@@ -197,6 +242,7 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
                 setGroupsView={setGroupsView}
                 onEditGroup={handleEditGroup}
                 onDeleteGroup={handleDeleteGroup}
+                onViewGroupDetails={handleViewGroupDetails}
                 currentPlan={currentPlan}
                 limits={currentLimits}
               />
@@ -209,8 +255,8 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
                 setGroupsView={setGroupsView}
                 setEditingGroupId={setEditingGroupId}
                 onFileUpload={handleFileUpload}
-                // currentPlan={currentPlan}
-                // limits={currentLimits}
+                currentPlan={currentPlan}
+                limits={currentLimits}
               />
             )
           case "modal":
@@ -224,6 +270,21 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
                 limits={currentLimits}
               />
             )
+          case "details":
+            const currentGroup = createdGroups.find((g) => g.id === viewingGroupId)
+            if (!currentGroup) return null
+
+            return (
+              <GroupDetails
+                group={currentGroup}
+                members={members}
+                setMembers={setMembers}
+                onSaveGroup={handleSaveGroup}
+                onBackToManage={handleBackToManage}
+                currentPlan={currentPlan}
+                limits={currentLimits}
+              />
+            )
           default:
             return (
               <ManageGroup
@@ -231,13 +292,14 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
                 setGroupsView={setGroupsView}
                 onEditGroup={handleEditGroup}
                 onDeleteGroup={handleDeleteGroup}
+                onViewGroupDetails={handleViewGroupDetails}
                 currentPlan={currentPlan}
                 limits={currentLimits}
               />
             )
         }
       case "subscription":
-        return <SubscriptionPanel currentPlan={currentPlan} onUpgrade={handleUpgrade} onDowngrade={handleDowngrade}/>
+        return <SubscriptionPanel currentPlan={currentPlan} onUpgrade={handleUpgrade} onDowngrade={handleDowngrade} />
       default:
         return (
           <EditProfile
@@ -252,29 +314,52 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="xl:max-w-5xl md:max-w-3xl sm:max-w-2xl max-w-[95vw] max-h-[90vh] overflow-y-auto py-6 px-3">
-        <DialogHeader className="">
-          <div className="flex justify-between items-center p-4">
-            <div className="flex items-center gap-1">
-              <img src="/logo.png" width={25} height={25} alt="logo" />
-              <h3 className="text-3xl font-semibold"> Present </h3>
+    <>
+      <Dialog open={open} onOpenChange={handleModalClose}>
+        <DialogContent className="xl:max-w-5xl md:max-w-3xl sm:max-w-2xl max-w-[95vw] max-h-[90vh] overflow-y-auto py-6 px-3">
+          <DialogHeader className="">
+            <div className="flex justify-between items-center p-4">
+              <div className="flex items-center gap-1">
+                <img src="/logo.png" width={25} height={25} alt="logo" />
+                <h3 className="text-3xl font-semibold"> Present </h3>
+              </div>
+              <div className="flex items-center gap-5">
+                <button
+                  onClick={() => handleModalClose(false)}
+                  className="text-gray-500 hover:text-gray-700 cursor-pointer "
+                >
+                  <img src="/exit-modal.png" width={20} height={20} alt="Close" />
+                </button>
+                <button
+                  onClick={() => handleModalClose(false)}
+                  className="text-gray-500 hover:text-gray-700 cursor-pointer"
+                >
+                  <XIcon />
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-5">
-              <button onClick={() => setOpen(false)} className="text-gray-500 hover:text-gray-700 cursor-pointer ">
-                <img src="/exit-modal.png" width={20} height={20} alt="Close" />
-              </button>
-              <button onClick={() => setOpen(false)} className="text-gray-500 hover:text-gray-700 cursor-pointer">
-                <XIcon />
-              </button>
-            </div>
-          </div>
 
-          <Navigation activeTab={activeTab} setActiveTab={setActiveTab} setGroupsView={setGroupsView} />
+            <Navigation activeTab={activeTab} setActiveTab={setActiveTab} setGroupsView={setGroupsView} />
 
-          <div className="min-h-[500px] px-5">{renderContent()}</div>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+            <div className="min-h-[500px] px-5">{renderContent()}</div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      {/* Group Invitation Dialog */}
+      {savedTeamData && (
+        <GroupInvitationDialog
+          open={showInvitationDialog}
+          setOpen={(open) => {
+            setShowInvitationDialog(open)
+            if (!open) {
+              setSavedTeamData(null) // Clear saved data when dialog closes
+            }
+          }}
+          teamName={savedTeamData.teamName}
+          accountOwner={savedTeamData.accountOwner}
+        />
+      )}
+    </>
   )
 }

@@ -2,7 +2,7 @@
 
 import { Plus, X, Pencil } from "lucide-react"
 
-type GroupsView = "manage" | "add" | "modal"
+type GroupsView = "manage" | "add" | "modal" | "details"
 type SubscriptionPlan = "free" | "plus" | "pro"
 
 interface Group {
@@ -23,6 +23,7 @@ interface ManageGroupProps {
   setGroupsView: (view: GroupsView) => void
   onEditGroup: (groupId: string) => void
   onDeleteGroup: (groupId: string) => void
+  onViewGroupDetails: (groupId: string) => void
   currentPlan: SubscriptionPlan
   limits: SubscriptionLimits
 }
@@ -32,6 +33,7 @@ export default function ManageGroup({
   setGroupsView,
   onEditGroup,
   onDeleteGroup,
+  onViewGroupDetails,
   currentPlan,
   limits,
 }: ManageGroupProps) {
@@ -50,8 +52,13 @@ export default function ManageGroup({
           {createdGroups.map((group) => (
             <div key={group.id} className="flex items-center justify-between py-4">
               <div className="flex items-center justify-between lg:w-2/3 w-full gap-4">
-                <div className="">
-                  <div className="text-lg sm:text-xl font-semibold text-black">{group.name}</div>
+                <div
+                  className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                  onClick={() => onViewGroupDetails(group.id)}
+                >
+                  <div className="text-lg sm:text-xl font-semibold text-black hover:text-blue-950 transition-colors">
+                    {group.name}
+                  </div>
                   <div className="text-sm text-gray-600">Group Name</div>
                 </div>
 
@@ -92,7 +99,7 @@ export default function ManageGroup({
         onClick={() => canAddMoreGroups && setGroupsView("add")}
         disabled={!canAddMoreGroups}
         className={`text-center w-full sm:w-2/5 rounded-md py-2 sm:py-1.5 font-medium text-sm sm:text-base cursor-pointer transition-colors ${
-          canAddMoreGroups ? "bg-black text-white hover:bg-gray-800" : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          canAddMoreGroups ? "bg-black text-white hover:bg-gray-800" : "bg-zinc-900 text-gray-50 cursor-not-allowed"
         }`}
       >
         {canAddMoreGroups
