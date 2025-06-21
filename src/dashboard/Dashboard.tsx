@@ -1,19 +1,46 @@
-import { AlignJustify, X } from 'lucide-react';
+import { AlignJustify, Plus, X } from 'lucide-react';
 import '../App.css';
 import { useState } from 'react';
 import ModalSystem from '../components/modal-components/modal-system';
 import { Dialog, DialogContent, DialogHeader } from '../components/ui/dialog';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import { Pencil, Cloud } from 'lucide-react';
 
-type EventCardProps = {
+
+
+type CardProps = {
     title: string;
     date: string;
     by: string;
     checkIns: string;
 };
 
-const EventCard = ({ title, date, by, checkIns }: EventCardProps) => (
+const EventCard = ({ title, date, by, checkIns }: CardProps) => (
+    <div className="rounded-lg outline-1 outline-gray-300 lg:h-[250px] p-3 my-5 flex flex-col">
+        <p className="font-semibold md:text-xl text-lg text-black">{title}</p>
+        <p className="font-medium text-sm pt-3">{date}</p>
+        <p className="font-medium text-sm">By: {by}</p>
+        <div className="flex flex-col flex-grow justify-end pt-5 lg:pt-0">
+            <div className="border border-t w-full border-gray-50"></div>
+            <div className="flex items-start gap-4 pt-3 pb-1">
+                <div>
+                    <img className="w-8 h-6" src="/Attendees Icon.png" alt="attendees" />
+                </div>
+                <div className="flex justify-between items-center w-full">
+                    <div>{checkIns}</div>
+                    <div>
+                        <img src="/Icon.png" alt="icon" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+const GroupCard = ({ title, date, by, checkIns }: CardProps) => (
+
+
     <div className="rounded-lg outline-1 outline-gray-300 lg:h-[250px] p-3 my-5 flex flex-col">
         <p className="font-semibold md:text-xl text-lg text-black">{title}</p>
         <p className="font-medium text-sm pt-3">{date}</p>
@@ -83,9 +110,73 @@ const upcomingEvents = [
     },
 ];
 
+const groupData = [
+    {
+        groupName: 'AP English (2nd Period 24-25)',
+        icon: [<Pencil className="w-5 h-5 mr-2 text-gray-600" />,<Cloud className="w-5 h-5 mr-2 text-gray-600" />],
+        events: [
+            {
+                title: 'AP English 2nd Period 3/20/25',
+                date: 'Mar 20, 2025',
+                by: 'Penny Smith',
+                checkIns: '18 Check-Ins',
+            },
+            {
+                title: 'AP English 2nd Period 4/10/25',
+                date: 'Apr 10, 2025',
+                by: 'Penny Smith',
+                checkIns: '22 Check-Ins',
+            },
+            {
+                title: 'AP English 2nd Period 5/1/25',
+                date: 'May 1, 2025',
+                by: 'Penny Smith',
+                checkIns: '20 Check-Ins',
+            },
+            {
+                title: 'AP English 2nd Period 5/15/25',
+                date: 'May 15, 2025',
+                by: 'Penny Smith',
+                checkIns: '19 Check-Ins',
+            },
+        ],
+    },
+    {
+        groupName: 'Freshman English (4th Period 24-25)',
+        icon: [<Pencil className="w-5 h-5 mr-2 text-gray-600" />,<Cloud className="w-5 h-5 mr-2 text-gray-600" />],
+        events: [
+            {
+                title: 'Freshman English 4th Period 3/20/25',
+                date: 'Mar 20, 2025',
+                by: 'Penny Smith',
+                checkIns: '18 Check-Ins',
+            },
+            {
+                title: 'Freshman English 4th Period 4/12/25',
+                date: 'Apr 12, 2025',
+                by: 'Penny Smith',
+                checkIns: '21 Check-Ins',
+            },
+            {
+                title: 'Freshman English 4th Period 5/2/25',
+                date: 'May 2, 2025',
+                by: 'Penny Smith',
+                checkIns: '17 Check-Ins',
+            },
+            {
+                title: 'Freshman English 4th Period 5/16/25',
+                date: 'May 16, 2025',
+                by: 'Penny Smith',
+                checkIns: '20 Check-Ins',
+            },
+        ],
+    },
+];
+
 function Dashboard() {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState<'events' | 'groups'>('events');
 
     return (
         <section className="container mx-auto">
@@ -142,25 +233,85 @@ function Dashboard() {
             <div className="p-10">
                 <h1 className="text-3xl font-semibold text-zinc-900">Welcome Back, Matteo</h1>
                 <div className="flex items-center my-8 gap-3">
-                    <div className="px-5 py-1.5 bg-transparent text-black border border-gray-900 rounded-lg">
+                    <button
+                        onClick={() => setActiveTab('events')}
+                        className={`px-5 py-1.5 rounded-lg border ${activeTab === 'events' ? 'border-gray-900 bg-gray-100' : 'border-gray-400'}`}
+                    >
                         My Events
-                    </div>
-                    <div className="px-6 py-1.5 bg-transparent text-black border border-gray-400 rounded-lg">
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('groups')}
+                        className={`px-6 py-1.5 rounded-lg border ${activeTab === 'groups' ? 'border-gray-900 bg-gray-100' : 'border-gray-400'}`}
+                    >
                         My Groups
-                    </div>
+                    </button>
                 </div>
-                <h2 className="text-xl font-semibold text-zinc-900">Previous Events</h2>
-                <div className="grid lg:grid-cols-4 grid-cols-2 gap-4 px-4">
-                    {previousEvents.map((event, idx) => (
-                        <EventCard key={idx} {...event} />
-                    ))}
-                </div>
-                <h2 className="text-xl font-semibold text-zinc-900">Upcoming Events</h2>
-                <div className="grid lg:grid-cols-4 grid-cols-2 gap-4 px-4">
-                    {upcomingEvents.map((event, idx) => (
-                        <EventCard key={idx} {...event} />
-                    ))}
-                </div>
+
+                {activeTab === 'events' ? (
+                    <>
+
+                        <h2 className="text-xl font-semibold text-zinc-900 mt-8">Previous Events</h2>
+                        {previousEvents.length === 0 ? (
+                            <div className='w-full border border-gray-400 h-52 rounded-xl mt-5'>
+                                <div className='mt-16 text-zinc-900 font-semibold text-center text-xl'>No Previous Events Yet.</div>
+                                <div className='text-zinc-900 font-semibold pt-1 text-center'>Create an event here</div>
+                            </div>
+                        ) : (
+                            <div className="grid lg:grid-cols-4 grid-cols-2 gap-4 px-4">
+                                {previousEvents.map((event, idx) => (
+                                    <EventCard key={idx} {...event} />
+                                ))}
+                            </div>
+                        )}
+
+
+                        <h2 className="text-xl font-semibold text-zinc-900">Upcoming Events</h2>
+                        {upcomingEvents.length === 0 ? (
+                            <div className='w-full border border-gray-400 h-52 rounded-xl mt-5'>
+                                <div className='mt-16 text-zinc-900 font-semibold text-center text-xl'>No Upcoming Events Yet.</div>
+                                <div className='text-zinc-900 font-semibold pt-1 text-center'>Create an event here</div>
+                            </div>
+                        ) : (
+                            <div className="grid lg:grid-cols-4 grid-cols-2 gap-4 px-4">
+                                {upcomingEvents.map((event, idx) => (
+                                    <EventCard key={idx} {...event} />
+                                ))}
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <h2 className="text-2xl px-4 font-semibold text-zinc-900 flex gap-2 mb-5">You have created 2/5 Groups <Plus className='text-gray-300'/></h2>
+                        {groupData.length === 0 ? (
+                            <div className='w-full border border-gray-400 h-52 rounded-xl mt-5'>
+                                <div className='mt-16 text-zinc-900 font-semibold text-center text-xl'>No Groups Yet.</div>
+                                <div className='text-zinc-900 font-semibold pt-1 text-center'>Create a group here</div>
+                            </div>
+                        ) : (
+                            <div className="px-4 space-y-5">
+                                {groupData.map((group, idx) => (
+                                    <div key={idx}>
+                                        <h3 className="text-2xl font-semibold text-zinc-800 mb-3 gap-2.5 flex items-center">
+                                            {group.groupName}
+                                            {group.icon}
+                                        </h3>
+                                        <div className="grid lg:grid-cols-4 grid-cols-2 gap-4">
+                                            {group.events.map((event, eventIdx) => (
+                                                <GroupCard
+                                                    key={eventIdx}
+                                                    title={event.title}
+                                                    date={event.date}
+                                                    by={event.by}
+                                                    checkIns={event.checkIns}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
 
             {/* Mobile Menu Animation */}
