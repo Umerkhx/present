@@ -1,0 +1,64 @@
+"use client"
+import { MoreHorizontal, Eye, Edit, Trash2 } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { useAppContext } from "../../context/app-context"
+
+// Update the component to accept groupId
+interface EventCardMenuProps {
+  eventId: string
+  eventTitle: string
+  groupId?: string
+}
+
+export default function EventCardMenu({ eventId, eventTitle, groupId }: EventCardMenuProps) {
+  const { handleEditGroupModal } = useAppContext()
+
+  const handleViewDetails = () => {
+    console.log("View details for event:", eventId)
+    // Navigate to event details page
+  }
+
+  const handleEdit = () => {
+    console.log("Edit event:", eventId)
+    // Navigate to edit event page
+  }
+
+  const handleDelete = () => {
+    console.log("Delete event:", eventId)
+    // Show delete confirmation dialog
+  }
+
+  const handleEditGroup = () => {
+    if (groupId) {
+      handleEditGroupModal(groupId)
+    }
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="p-1 rounded-full hover:bg-gray-100 transition-colors">
+          <MoreHorizontal className="w-4 h-4 text-gray-600" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuItem onClick={handleViewDetails} className="flex items-center gap-2">
+          <Eye className="w-4 h-4" />
+          View Details
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEdit} className="flex items-center gap-2">
+          <Edit className="w-4 h-4" />
+          Edit Event
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEditGroup} className="flex items-center gap-2">
+          <Edit className="w-4 h-4" />
+          Edit Group
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleDelete} className="flex items-center gap-2 text-red-600">
+          <Trash2 className="w-4 h-4" />
+          Delete Event
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}

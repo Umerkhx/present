@@ -1,26 +1,10 @@
 "use client"
 
 import { Dot } from "lucide-react"
+import { useAppContext } from "../../context/app-context"
 
-type SubscriptionPlan = "free" | "plus" | "pro"
-
-interface SubscriptionPanelProps {
-  currentPlan: SubscriptionPlan
-  onUpgrade: (plan: SubscriptionPlan) => void
-  onDowngrade: (plan: SubscriptionPlan) => void
-}
-
-export default function SubscriptionPanel({ currentPlan, onUpgrade,onDowngrade }: SubscriptionPanelProps) {
-  const getPlanDisplayName = (plan: SubscriptionPlan) => {
-    switch (plan) {
-      case "free":
-        return "Present Free"
-      case "plus":
-        return "Present Plus"
-      case "pro":
-        return "Present Pro"
-    }
-  }
+export default function SubscriptionPanel() {
+  const { currentPlan, handleUpgrade, handleDowngrade, getPlanDisplayName } = useAppContext()
 
   return (
     <div className="p-4">
@@ -37,19 +21,15 @@ export default function SubscriptionPanel({ currentPlan, onUpgrade,onDowngrade }
             <p className="text-gray-900 text-left">$0 / Month</p>
             <ul className="text-zinc-950 font-medium mt-4">
               <li className="flex justify-start">
-                {" "}
                 <Dot /> Unlimited Events
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> Unlimited Check-ins
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> 1 Group
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> 24 members per group
               </li>
             </ul>
@@ -58,7 +38,7 @@ export default function SubscriptionPanel({ currentPlan, onUpgrade,onDowngrade }
             className={`cursor-pointer border rounded-lg px-4 py-1.5 text-center mt-2 w-full ${
               currentPlan === "free" ? "border-gray-400 text-black" : "border-gray-400"
             }`}
-            onClick={() => currentPlan !== "free" && onDowngrade("free")}
+            onClick={() => currentPlan !== "free" && handleDowngrade("free")}
             disabled={currentPlan === "free"}
           >
             {currentPlan === "free" ? "Your Plan" : "Downgrade"}
@@ -73,23 +53,18 @@ export default function SubscriptionPanel({ currentPlan, onUpgrade,onDowngrade }
             <p className="text-gray-900 text-left">$12 / Month</p>
             <ul className="text-zinc-950 font-medium mt-4">
               <li className="flex justify-start">
-                {" "}
                 <Dot /> Unlimited Events
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> Unlimited Check-ins
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> 5 Groups
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> 100 members per group
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> Export check-in data
               </li>
             </ul>
@@ -100,7 +75,7 @@ export default function SubscriptionPanel({ currentPlan, onUpgrade,onDowngrade }
                 ? "border border-gray-400 text-black"
                 : "bg-black hover:bg-zinc-900 text-white border border-gray-400"
             }`}
-            onClick={() => currentPlan !== "plus" && onUpgrade("plus")}
+            onClick={() => currentPlan !== "plus" && handleUpgrade("plus")}
             disabled={currentPlan === "plus"}
           >
             {currentPlan === "plus" ? "Your Plan" : "Upgrade"}
@@ -115,32 +90,25 @@ export default function SubscriptionPanel({ currentPlan, onUpgrade,onDowngrade }
             <p className="text-gray-900 text-left">$25 / Month</p>
             <ul className="text-zinc-950 font-medium mt-4">
               <li className="flex justify-start">
-                {" "}
                 <Dot /> Unlimited Events
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> Unlimited Check-ins
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> 10 Groups
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> 300 members per group
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> 4 account admins
               </li>
               <li className="flex justify-start">
-                {" "}
                 <Dot /> export check-in data
               </li>
               <li className="flex justify-start">
-                {" "}
-                <Dot /> export group data{" "}
+                <Dot /> export group data
               </li>
             </ul>
           </div>
@@ -150,7 +118,7 @@ export default function SubscriptionPanel({ currentPlan, onUpgrade,onDowngrade }
                 ? "border border-gray-400 text-black"
                 : "bg-black hover:bg-zinc-900 text-white border border-gray-400"
             }`}
-            onClick={() => currentPlan !== "pro" && onUpgrade("pro")}
+            onClick={() => currentPlan !== "pro" && handleUpgrade("pro")}
             disabled={currentPlan === "pro"}
           >
             {currentPlan === "pro" ? "Your Plan" : "Upgrade"}

@@ -1,200 +1,35 @@
 "use client"
-import { useState, type Dispatch, type SetStateAction } from "react"
-import type React from "react"
 
+import type { Dispatch, SetStateAction } from "react"
 import { XIcon } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
-import Navigation from "./Navigation"
+import GroupDetails from "./group-details"
+import GroupInvitationDialog from "./group-invitation-dialog"
+import { useAppContext } from "../../context/app-context"
+import EditProfile from "./EditProfile"
+import Admin from "./Admin"
 import ManageGroup from "./ManageGroup"
 import AddGroup from "./AddGroup"
 import ModalGroup from "./ModalGroup"
-import EditProfile from "./EditProfile"
-import Admin from "./Admin"
 import SubscriptionPanel from "./SubscriptionPanel"
-import GroupDetails from "./group-details"
-import GroupInvitationDialog from "./group-invitation-dialog"
-
-type ActiveTab = "profile" | "admin" | "groups" | "subscription"
-type GroupsView = "manage" | "add" | "modal" | "details"
-type SubscriptionPlan = "free" | "plus" | "pro"
-
-interface Member {
-  id: number
-  initials: string
-  firstName: string
-  lastName: string
-  bgColor: string
-}
-
-interface TeamMember {
-  firstName: string
-  lastName: string
-  role: string
-  initials: string
-  bgColor: string
-}
+import Navigation from "./Navigation"
 
 interface ModalSystemProps {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-interface SubscriptionLimits {
-  maxGroups: number
-  maxMembersPerGroup: number
-  maxAdmins: number
-  canExportData: boolean
-}
-
-const subscriptionLimits: Record<SubscriptionPlan, SubscriptionLimits> = {
-  free: {
-    maxGroups: 1,
-    maxMembersPerGroup: 24,
-    maxAdmins: 0,
-    canExportData: false,
-  },
-  plus: {
-    maxGroups: 5,
-    maxMembersPerGroup: 100,
-    maxAdmins: 0,
-    canExportData: true,
-  },
-  pro: {
-    maxGroups: 10,
-    maxMembersPerGroup: 300,
-    maxAdmins: 4,
-    canExportData: true,
-  },
-}
-
-const profileImages = [
-  "/profile/PP 1.png",
-  "/profile/PP 2.png",
-  "/profile/PP 3.png",
-  "/profile/PP 4.png",
-  "/profile/PP 5.png",
-  "/profile/PP 6.png",
-  "/profile/PP 7.png",
-  "/profile/PP 8.png",
-  "/profile/PP 9.png",
-  "/profile/PP 10.png",
-  "/profile/PP 11.png",
-  "/profile/PP 12.png",
-]
-
 export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("groups")
-  const [groupsView, setGroupsView] = useState<GroupsView>("manage")
-  const [groupName, setGroupName] = useState("")
-  const [selectedImage, setSelectedImage] = useState(profileImages[0])
-  const [formData, setFormData] = useState({ firstName: "", lastName: "" })
-  const [, setProfileSaved] = useState(false)
-  const [createdGroups, setCreatedGroups] = useState<
-    Array<{
-      id: string
-      name: string
-      memberCount: number
-    }>
-  >([])
-  const [editingGroupId, setEditingGroupId] = useState<string | null>(null)
-  const [members, setMembers] = useState<Member[]>([
-    { id: 1, initials: "MM", firstName: "Marilyn", lastName: "Monroe", bgColor: "bg-purple-400" },
-    { id: 2, initials: "TB", firstName: "Tom", lastName: "Brady", bgColor: "bg-cyan-400" },
-    { id: 3, initials: "GC", firstName: "George", lastName: "Clooney", bgColor: "bg-green-400" },
-    { id: 4, initials: "", firstName: "", lastName: "", bgColor: "bg-gray-400" },
-  ])
-
-  // Subscription state
-  const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>("free")
-  const currentLimits = subscriptionLimits[currentPlan]
-
-  // Group invitation dialog state
-  const [showInvitationDialog, setShowInvitationDialog] = useState(false)
-  const [savedTeamData, setSavedTeamData] = useState<{
-    teamName: string
-    accountOwner: TeamMember
-  } | null>(null)
-
-  const [viewingGroupId, setViewingGroupId] = useState<string | null>(null)
-
-  const handleProfileSubmit = () => {
-    const { firstName, lastName } = formData
-    if (firstName.trim() && lastName.trim()) {
-      setProfileSaved(true)
-      console.log("Saved profile:", {
-        firstName,
-        lastName,
-        selectedImage,
-      })
-    }
-  }
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file && groupName.trim()) {
-      setTimeout(() => {
-        setGroupsView("modal")
-      }, 500)
-    }
-  }
-
-  const handleEditGroup = (groupId: string) => {
-    const group = createdGroups.find((g) => g.id === groupId)
-    if (group) {
-      setGroupName(group.name)
-      setEditingGroupId(groupId)
-      setGroupsView("modal")
-    }
-  }
-
-  const handleDeleteGroup = (groupId: string) => {
-    setCreatedGroups((prev) => prev.filter((group) => group.id !== groupId))
-  }
-
-  const handleViewGroupDetails = (groupId: string) => {
-    const group = createdGroups.find((g) => g.id === groupId)
-    if (group) {
-      setViewingGroupId(groupId)
-      setGroupsView("details")
-    }
-  }
-
-  const handleBackToManage = () => {
-    setViewingGroupId(null)
-    setGroupsView("manage")
-  }
-
-  const handleSaveGroup = () => {
-    if (groupName.trim()) {
-      const memberCount = members.filter((m) => m.firstName && m.lastName).length
-
-      if (editingGroupId) {
-        // Update existing group
-        setCreatedGroups((prev) =>
-          prev.map((group) =>
-            group.id === editingGroupId ? { ...group, name: groupName, memberCount: memberCount } : group,
-          ),
-        )
-      } else {
-        // Create new group
-        const newGroup = {
-          id: Date.now().toString(),
-          name: groupName,
-          memberCount: memberCount,
-        }
-        setCreatedGroups((prev) => [...prev, newGroup])
-      }
-
-      setGroupName("")
-      setEditingGroupId(null)
-      setGroupsView("manage")
-    }
-  }
-
-  // Handle team save from Admin component
-  const handleTeamSave = (teamName: string, accountOwner: TeamMember) => {
-    setSavedTeamData({ teamName, accountOwner })
-  }
+  const {
+    activeTab,
+    groupsView,
+    createdGroups,
+    viewingGroupId,
+    savedTeamData,
+    showInvitationDialog,
+    setShowInvitationDialog,
+    setSavedTeamData,
+  } = useAppContext()
 
   // Handle modal close - show invitation dialog if team was saved
   const handleModalClose = (isOpen: boolean) => {
@@ -209,107 +44,32 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
     }
   }
 
-  const handleUpgrade = (plan: SubscriptionPlan) => {
-    setCurrentPlan(plan)
-    console.log(`Upgraded to ${plan} plan`)
-  }
-
-  const handleDowngrade = (plan: SubscriptionPlan) => {
-    setCurrentPlan(plan)
-    console.log(`Downgraded to ${plan} plan`)
-  }
-
   const renderContent = () => {
     switch (activeTab) {
       case "profile":
-        return (
-          <EditProfile
-            formData={formData}
-            setFormData={setFormData}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-            onSubmit={handleProfileSubmit}
-          />
-        )
+        return <EditProfile />
       case "admin":
-        return <Admin currentPlan={currentPlan} limits={currentLimits} onTeamSave={handleTeamSave} />
+        return <Admin />
       case "groups":
         switch (groupsView) {
           case "manage":
-            return (
-              <ManageGroup
-                createdGroups={createdGroups}
-                setGroupsView={setGroupsView}
-                onEditGroup={handleEditGroup}
-                onDeleteGroup={handleDeleteGroup}
-                onViewGroupDetails={handleViewGroupDetails}
-                currentPlan={currentPlan}
-                limits={currentLimits}
-              />
-            )
+            return <ManageGroup />
           case "add":
-            return (
-              <AddGroup
-                groupName={groupName}
-                setGroupName={setGroupName}
-                setGroupsView={setGroupsView}
-                setEditingGroupId={setEditingGroupId}
-                onFileUpload={handleFileUpload}
-                currentPlan={currentPlan}
-                limits={currentLimits}
-              />
-            )
+            return <AddGroup />
           case "modal":
-            return (
-              <ModalGroup
-                groupName={groupName}
-                members={members}
-                setMembers={setMembers}
-                onSaveGroup={handleSaveGroup}
-                currentPlan={currentPlan}
-                limits={currentLimits}
-              />
-            )
+            return <ModalGroup />
           case "details":
             const currentGroup = createdGroups.find((g) => g.id === viewingGroupId)
             if (!currentGroup) return null
 
-            return (
-              <GroupDetails
-                group={currentGroup}
-                members={members}
-                setMembers={setMembers}
-                onSaveGroup={handleSaveGroup}
-                onBackToManage={handleBackToManage}
-                currentPlan={currentPlan}
-                limits={currentLimits}
-              />
-            )
+            return <GroupDetails group={currentGroup} />
           default:
-            return (
-              <ManageGroup
-                createdGroups={createdGroups}
-                setGroupsView={setGroupsView}
-                onEditGroup={handleEditGroup}
-                onDeleteGroup={handleDeleteGroup}
-                onViewGroupDetails={handleViewGroupDetails}
-                currentPlan={currentPlan}
-                limits={currentLimits}
-              />
-            )
+            return <ManageGroup />
         }
       case "subscription":
-        return <SubscriptionPanel currentPlan={currentPlan} onUpgrade={handleUpgrade} onDowngrade={handleDowngrade} />
+        return <SubscriptionPanel />
       default:
-        return (
-          <EditProfile
-            formData={formData}
-            setFormData={setFormData}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-            onSubmit={handleProfileSubmit}
-          />
-        )
+        return <EditProfile />
     }
   }
 
@@ -339,7 +99,7 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
               </div>
             </div>
 
-            <Navigation activeTab={activeTab} setActiveTab={setActiveTab} setGroupsView={setGroupsView} />
+            <Navigation />
 
             <div className="min-h-[500px] px-5">{renderContent()}</div>
           </DialogHeader>

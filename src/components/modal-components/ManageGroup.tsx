@@ -1,42 +1,19 @@
 "use client"
 
 import { Plus, X, Pencil } from "lucide-react"
+import { useAppContext } from "../../context/app-context"
 
-type GroupsView = "manage" | "add" | "modal" | "details"
-type SubscriptionPlan = "free" | "plus" | "pro"
+export default function ManageGroup() {
+  const {
+    createdGroups,
+    setGroupsView,
+    handleEditGroup,
+    handleDeleteGroup,
+    handleViewGroupDetails,
+    currentPlan,
+    limits,
+  } = useAppContext()
 
-interface Group {
-  id: string
-  name: string
-  memberCount: number
-}
-
-interface SubscriptionLimits {
-  maxGroups: number
-  maxMembersPerGroup: number
-  maxAdmins: number
-  canExportData: boolean
-}
-
-interface ManageGroupProps {
-  createdGroups: Group[]
-  setGroupsView: (view: GroupsView) => void
-  onEditGroup: (groupId: string) => void
-  onDeleteGroup: (groupId: string) => void
-  onViewGroupDetails: (groupId: string) => void
-  currentPlan: SubscriptionPlan
-  limits: SubscriptionLimits
-}
-
-export default function ManageGroup({
-  createdGroups,
-  setGroupsView,
-  onEditGroup,
-  onDeleteGroup,
-  onViewGroupDetails,
-  currentPlan,
-  limits,
-}: ManageGroupProps) {
   const canAddMoreGroups = createdGroups.length < limits.maxGroups
 
   return (
@@ -54,7 +31,7 @@ export default function ManageGroup({
               <div className="flex items-center justify-between lg:w-2/3 w-full gap-4">
                 <div
                   className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
-                  onClick={() => onViewGroupDetails(group.id)}
+                  onClick={() => handleViewGroupDetails(group.id)}
                 >
                   <div className="text-lg sm:text-xl font-semibold text-black hover:text-blue-950 transition-colors">
                     {group.name}
@@ -72,13 +49,13 @@ export default function ManageGroup({
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => onEditGroup(group.id)}
+                    onClick={() => handleEditGroup(group.id)}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   >
                     <Pencil className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => onDeleteGroup(group.id)}
+                    onClick={() => handleDeleteGroup(group.id)}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   >
                     <X className="w-5 h-5" />

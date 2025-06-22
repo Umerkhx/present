@@ -1,137 +1,31 @@
 "use client"
 
-import { useState } from "react"
 import { X, Edit2, PencilIcon } from "lucide-react"
 import { Input } from "../ui/input"
 import { Avatar, AvatarFallback } from "../ui/avatar"
+import { useAppContext } from "../../context/app-context"
 
-type SubscriptionPlan = "free" | "plus" | "pro"
-
-interface SubscriptionLimits {
-  maxGroups: number
-  maxMembersPerGroup: number
-  maxAdmins: number
-  canExportData: boolean
-}
-
-interface TeamMember {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-  initials: string
-  bgColor: string
-}
-
-interface AdminProps {
-  currentPlan: SubscriptionPlan
-  limits: SubscriptionLimits
-  onTeamSave?: (
-    teamName: string,
-    accountOwner: {
-      firstName: string
-      lastName: string
-      role: string
-      initials: string
-      bgColor: string
-    },
-  ) => void
-}
-
-type ViewMode = "initial" | "edit" | "saved"
-
-export default function Admin({ currentPlan,  onTeamSave }: AdminProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>("initial")
-  const [teamName, setTeamName] = useState("Your superb team")
-  const [isEditingOwner, setIsEditingOwner] = useState(false)
-
-  // Account owner (editable)
-  const [accountOwner, setAccountOwner] = useState<TeamMember>({
-    id: "owner",
-    firstName: "Matteo",
-    lastName: "Zamboni",
-    email: "mzamboni@gmail.com",
-    role: "Account Owner",
-    initials: "MZ",
-    bgColor: "bg-orange-400",
-  })
-
-  const [admins, setAdmins] = useState<TeamMember[]>([
-    {
-      id: "1",
-      firstName: "Marilyn",
-      lastName: "Monroe",
-      email: "",
-      role: "",
-      initials: "MM",
-      bgColor: "bg-purple-400",
-    },
-    {
-      id: "2",
-      firstName: "Barack",
-      lastName: "Obama",
-      email: "",
-      role: "",
-      initials: "BO",
-      bgColor: "bg-cyan-400",
-    },
-    {
-      id: "3",
-      firstName: "George",
-      lastName: "Clooney",
-      email: "",
-      role: "",
-      initials: "GC",
-      bgColor: "bg-green-400",
-    },
-    {
-      id: "4",
-      firstName: "",
-      lastName: "",
-      email: "",
-      role: "",
-      initials: "",
-      bgColor: "bg-gray-400",
-    },
-  ])
-
-  const [savedAdmins, setSavedAdmins] = useState<TeamMember[]>([])
+export default function Admin() {
+  const {
+    currentPlan,
+    limits,
+    viewMode,
+    setViewMode,
+    teamName,
+    setTeamName,
+    isEditingOwner,
+    setIsEditingOwner,
+    accountOwner,
+    admins,
+    savedAdmins,
+    setSavedAdmins,
+    handleTeamSave,
+    updateAccountOwner,
+    updateAdmin,
+    removeAdmin,
+  } = useAppContext()
 
   const hasAdminAccess = currentPlan === "pro"
-
-  const removeAdmin = (id: string) => {
-    setAdmins(admins.filter((admin) => admin.id !== id))
-  }
-
-  const updateAdmin = (id: string, field: keyof TeamMember, value: string) => {
-    setAdmins(
-      admins.map((admin) => {
-        if (admin.id === id) {
-          const updated = { ...admin, [field]: value }
-          if (field === "firstName" || field === "lastName") {
-            updated.initials =
-              (field === "firstName" ? value.charAt(0) : admin.firstName.charAt(0)) +
-              (field === "lastName" ? value.charAt(0) : admin.lastName.charAt(0))
-          }
-          return updated
-        }
-        return admin
-      }),
-    )
-  }
-
-  const updateAccountOwner = (field: keyof TeamMember, value: string) => {
-    setAccountOwner((prev) => {
-      const updated = { ...prev, [field]: value }
-      if (field === "firstName" || field === "lastName") {
-        updated.initials =
-          (field === "firstName" ? value.charAt(0) : prev.firstName.charAt(0)) +
-          (field === "lastName" ? value.charAt(0) : prev.lastName.charAt(0))
-      }
-      return updated
-    })
-  }
 
   const handleSave = () => {
     // Filter completed admins and set default emails/roles
@@ -146,16 +40,16 @@ export default function Admin({ currentPlan,  onTeamSave }: AdminProps) {
     setSavedAdmins(completedAdmins)
     setViewMode("saved")
 
-    // Notify parent component about team save
-    if (onTeamSave) {
-      onTeamSave(teamName, {
-        firstName: accountOwner.firstName,
-        lastName: accountOwner.lastName,
-        role: accountOwner.role,
-        initials: accountOwner.initials,
-        bgColor: accountOwner.bgColor,
-      })
-    }
+    // Notify about team save
+    handleTeamSave(teamName, {
+      firstName: accountOwner.firstName,
+      lastName: accountOwner.lastName,
+      role: accountOwner.role,
+      initials: accountOwner.initials,
+      bgColor: accountOwner.bgColor,
+      id: "",
+      email: ""
+    })
   }
 
   const handleEditTeam = () => {

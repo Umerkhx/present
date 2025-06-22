@@ -4,71 +4,24 @@ import { useState } from "react"
 import { ChevronDown } from "lucide-react"
 import { Avatar, AvatarFallback } from "../ui/avatar"
 import { Input } from "../ui/input"
-
-type SubscriptionPlan = "free" | "plus" | "pro"
-
-interface Member {
-  id: number
-  initials: string
-  firstName: string
-  lastName: string
-  bgColor: string
-}
-
-interface Group {
-  id: string
-  name: string
-  memberCount: number
-  members?: Member[]
-}
-
-interface SubscriptionLimits {
-  maxGroups: number
-  maxMembersPerGroup: number
-  maxAdmins: number
-  canExportData: boolean
-}
+import { useAppContext } from "../../context/app-context"
 
 interface GroupDetailsProps {
-  group: Group
-  members: Member[]
-  setMembers: (members: Member[]) => void
-  onSaveGroup: () => void
-  onBackToManage: () => void
-  currentPlan: SubscriptionPlan
-  limits: SubscriptionLimits
+  group: {
+    id: string
+    name: string
+    memberCount: number
+  }
 }
 
-export default function GroupDetails({
-  group,
-  members,
-  setMembers,
-  onSaveGroup,
-  onBackToManage,
-  limits,
-}: GroupDetailsProps) {
+export default function GroupDetails({ group }: GroupDetailsProps) {
+  const { members, setMembers, handleSaveGroup, handleBackToManage, limits, updateMember } = useAppContext()
+
   const [isEditing, setIsEditing] = useState(false)
   const [groupName, setGroupName] = useState(group.name)
 
-  const updateMember = (id: number, field: keyof Member, value: string) => {
-    setMembers(
-      members.map((member) => {
-        if (member.id === id) {
-          const updated = { ...member, [field]: value }
-          if (field === "firstName" || field === "lastName") {
-            updated.initials =
-              (field === "firstName" ? value.charAt(0) : member.lastName.charAt(0)) +
-              (field === "lastName" ? value.charAt(0) : member.firstName.charAt(0))
-          }
-          return updated
-        }
-        return member
-      }),
-    )
-  }
-
   const handleSave = () => {
-    onSaveGroup()
+    handleSaveGroup()
     setIsEditing(false)
   }
 
@@ -206,7 +159,7 @@ export default function GroupDetails({
 
       {/* Back Button */}
       <button
-        onClick={onBackToManage}
+        onClick={handleBackToManage}
         className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm mt-6"
       >
         Back to Groups

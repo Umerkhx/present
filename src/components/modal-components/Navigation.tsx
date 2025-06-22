@@ -1,13 +1,8 @@
-type ActiveTab = "profile" | "admin" | "groups" | "subscription";
-type GroupsView = "manage" | "add" | "modal";
+import { useAppContext } from "../../context/app-context";
 
-interface NavigationProps {
-    activeTab: ActiveTab;
-    setActiveTab: (tab: ActiveTab) => void;
-    setGroupsView: (view: GroupsView) => void;
-}
 
-export default function Navigation({ activeTab, setActiveTab, setGroupsView }: NavigationProps) {
+export default function Navigation() {
+    const { activeTab, setActiveTab, setGroupsView } = useAppContext()
     return (
         <div className="flex sm:flex-row flex-col items-center gap-2 sm:gap-4 sm:justify-start justify-center px-4">
             <div className="flex items-center gap-2">

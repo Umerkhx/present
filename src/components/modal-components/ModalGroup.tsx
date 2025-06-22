@@ -4,41 +4,11 @@ import { useState } from "react"
 import { Plus, X, ChevronDown, AlertCircle } from "lucide-react"
 import { Avatar, AvatarFallback } from "../ui/avatar"
 import { Input } from "../ui/input"
+import { useAppContext } from "../../context/app-context"
 
-type SubscriptionPlan = "free" | "plus" | "pro"
+export default function ModalGroup() {
+  const { groupName, members, setMembers, handleSaveGroup, currentPlan, limits, updateMember } = useAppContext()
 
-interface Member {
-  id: number
-  initials: string
-  firstName: string
-  lastName: string
-  bgColor: string
-}
-
-interface SubscriptionLimits {
-  maxGroups: number
-  maxMembersPerGroup: number
-  maxAdmins: number
-  canExportData: boolean
-}
-
-interface ModalGroupProps {
-  groupName: string
-  members: Member[]
-  setMembers: (members: Member[]) => void
-  onSaveGroup: () => void
-  currentPlan: SubscriptionPlan
-  limits: SubscriptionLimits
-}
-
-export default function ModalGroup({
-  groupName,
-  members,
-  setMembers,
-  onSaveGroup,
-  currentPlan,
-  limits,
-}: ModalGroupProps) {
   const [hasCustomField, setHasCustomField] = useState(false)
   const [customFieldName] = useState("New Field")
 
@@ -61,29 +31,6 @@ export default function ModalGroup({
 
   const removeMember = (id: number) => {
     setMembers(members.filter((member) => member.id !== id))
-  }
-
-  const updateMember = (id: number, field: string, value: string) => {
-    setMembers(
-      members.map((member) => {
-        if (member.id === id) {
-          return {
-            ...member,
-            [field]: value,
-            // Update initials when first or last name changes
-            ...(field === "firstName" || field === "lastName"
-              ? {
-                  initials:
-                    field === "firstName"
-                      ? value.charAt(0) + member.lastName.charAt(0)
-                      : member.firstName.charAt(0) + value.charAt(0),
-                }
-              : {}),
-          }
-        }
-        return member
-      }),
-    )
   }
 
   const handleAddCustomField = () => {
@@ -235,7 +182,7 @@ export default function ModalGroup({
       </div>
 
       <button
-        onClick={onSaveGroup}
+        onClick={handleSaveGroup}
         className="w-full lg:w-1/4 bg-black text-white hover:bg-gray-800 mt-6 py-2.5 sm:py-3 rounded-lg font-medium text-sm sm:text-base"
       >
         Save

@@ -44,15 +44,6 @@ export default function CheckInPage() {
             formData.favoriteBook.trim().toLowerCase() !== eventData.correctAnswer.toLowerCase()
         ) newErrors.push("Incorrect answer to the question. Please try again.")
 
-        // const now = new Date()
-        // const currentTime = now.getHours() * 60 + now.getMinutes()
-        // const start = parseInt(checkInStartTime.split(":")[0]) * 60 + parseInt(checkInStartTime.split(":")[1])
-        // const end = parseInt(checkInEndTime.split(":")[0]) * 60 + parseInt(checkInEndTime.split(":")[1])
-
-        // if (currentTime > start || currentTime > end) {
-        //     newErrors.push("You are trying to check in outside of the allowed time window.")
-        // }
-
         return newErrors
     }
 

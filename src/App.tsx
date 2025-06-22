@@ -9,10 +9,11 @@ import Dashboard from "./dashboard/Dashboard"
 import EventInfo from "./event-details/EventInfo"
 import CheckInPage from "./check-in/Checkin"
 import SignUp from "./sign-up/SignUp"
+import { AppProvider } from "./context/app-context"
 
 function App() {
   return (
-
+    <AppProvider>
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
@@ -24,6 +25,7 @@ function App() {
         <Route path="/event-details" element={<EventInfo/>} />
         <Route path="/check-in" element={<CheckInPage/>} />
       </Routes>
+      </AppProvider>
  
   )
 }
