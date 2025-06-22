@@ -8,7 +8,6 @@ import { useAppContext } from "../../context/app-context"
 export default function Admin() {
   const {
     currentPlan,
-    limits,
     viewMode,
     setViewMode,
     teamName,

@@ -15,7 +15,7 @@ interface GroupDetailsProps {
 }
 
 export default function GroupDetails({ group }: GroupDetailsProps) {
-  const { members, setMembers, handleSaveGroup, handleBackToManage, limits, updateMember } = useAppContext()
+  const { members,  handleSaveGroup, handleBackToManage, limits, updateMember } = useAppContext()
 
   const [isEditing, setIsEditing] = useState(false)
   const [groupName, setGroupName] = useState(group.name)

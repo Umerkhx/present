@@ -20,7 +20,7 @@ type CardProps = {
   groupName?: string
 }
 
-const EventCard = ({ id, title, date, by, checkIns, groupName, groupId }: CardProps & { groupId?: string }) => (
+const EventCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: string }) => (
   <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col flex-shrink-0 lg:w-80 w-72">
     <div className="flex justify-between items-start mb-2">
       <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
@@ -44,7 +44,7 @@ const EventCard = ({ id, title, date, by, checkIns, groupName, groupId }: CardPr
   </div>
 )
 
-const GroupCard = ({ id, title, date, by, checkIns, groupName, groupId }: CardProps & { groupId?: string }) => (
+const GroupCard = ({ id, title, date, by, checkIns}: CardProps & { groupId?: string }) => (
   <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col flex-shrink-0 lg:w-80 w-72">
     <div className="flex justify-between items-start mb-2">
       <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>

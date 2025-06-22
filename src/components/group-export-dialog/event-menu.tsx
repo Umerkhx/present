@@ -10,7 +10,7 @@ interface EventCardMenuProps {
   groupId?: string
 }
 
-export default function EventCardMenu({ eventId, eventTitle, groupId }: EventCardMenuProps) {
+export default function EventCardMenu({ eventId,  groupId }: EventCardMenuProps) {
   const { handleEditGroupModal } = useAppContext()
 
   const handleViewDetails = () => {
