@@ -1,13 +1,13 @@
 "use client"
 
-import { AlignJustify, X, Edit2, XIcon, Copy } from "lucide-react"
+import { AlignJustify, X, XIcon, Copy } from "lucide-react"
 import type React from "react"
 import { useState, useEffect } from "react"
 import EventDetails from "../components/EventDetails"
 import LocationSelector from "../components/LocationSelector"
 import CheckInSettings from "../components/CheckInSettings"
 import ActionButton from "../components/ActionButton"
-import type { EventData } from "../types"
+import type { EventData, Option } from "../types"
 import Toggle from "../components/Toggle"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog"
 import { cn } from "../lib/utils"
@@ -15,13 +15,16 @@ import { Link } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { Label } from "../components/ui/label"
 import { Input } from "../components/ui/input"
+import QuestionEditor from "../components/create-components/question-editor"
 
 interface Question {
   id: string
   text: string
   type: "text" | "select"
   required: boolean
-  saved?: boolean
+  allowMultiSelect: boolean
+  options: Option[]
+  saved: boolean
 }
 
 const EventCheckIn: React.FC = () => {
@@ -46,17 +49,49 @@ const EventCheckIn: React.FC = () => {
   //for the backend dev: Create a default question when addQuestions is toggled on
   useEffect(() => {
     if (eventData.addQuestions && questions.length === 0) {
+      // Add sample saved questions to match your design
       setQuestions([
         {
           id: "1",
-          text: "",
-          type: "text",
+          text: "What dietary restrictions do you have for the event? Please also include any sensitivities",
+          type: "select",
           required: false,
-          saved: false,
+          allowMultiSelect: true,
+          options: [
+            { id: "1", text: "None" },
+            { id: "2", text: "Vegetarian" },
+            { id: "3", text: "Vegan" },
+            { id: "4", text: "No Soy" },
+          ],
+          saved: true,
+        },
+        {
+          id: "2",
+          text: "What was your favorite subject?",
+          type: "select",
+          required: false,
+          allowMultiSelect: false,
+          options: [
+            { id: "1", text: "Math" },
+            { id: "2", text: "Engineering" },
+            { id: "3", text: "Aerodynamics" },
+            { id: "4", text: "Lab" },
+          ],
+          saved: true,
+        },
+        {
+          id: "3",
+          text: "What is your LinkedIn?",
+          type: "text",
+          required: true,
+          allowMultiSelect: false,
+          options: [],
+          saved: true,
         },
       ])
     }
   }, [eventData.addQuestions, questions.length])
+
 
   const handleChange = (name: string, value: any) => {
     setEventData({
@@ -65,9 +100,7 @@ const EventCheckIn: React.FC = () => {
     })
   }
 
-  const handleSubmit = () => {
-    console.log("Event data submitted:", eventData)
-  }
+
 
   const updateQuestion = (id: string, updates: Partial<Question>) => {
     setQuestions(questions.map((q) => (q.id === id ? { ...q, ...updates } : q)))
@@ -78,25 +111,65 @@ const EventCheckIn: React.FC = () => {
   }
 
   const addQuestion = () => {
-    const newQuestion = {
-      id: (questions.length + 1).toString(),
+    const newQuestion: Question = {
+      id: Date.now().toString(),
       text: "",
-      type: "text" as const,
+      type: "text",
       required: false,
+      allowMultiSelect: false,
+      options: [
+        { id: "1", text: "" },
+        { id: "2", text: "" },
+      ],
       saved: false,
     }
     setQuestions([...questions, newQuestion])
   }
 
+
   const saveQuestion = (id: string) => {
     const question = questions.find((q) => q.id === id)
     if (question && question.text.trim()) {
-      updateQuestion(id, { saved: true })
+      if (question.type === "select") {
+        // For select questions, ensure at least one option has text
+        const validOptions = question.options.filter((opt) => opt.text.trim())
+        if (validOptions.length > 0) {
+          // Update the question with only valid options and mark as saved
+          updateQuestion(id, {
+            saved: true,
+            options: validOptions,
+          })
+        }
+      } else {
+        // For text questions, just save
+        updateQuestion(id, { saved: true })
+      }
     }
   }
 
   const editQuestion = (id: string) => {
     updateQuestion(id, { saved: false })
+  }
+
+
+
+  const handleSubmit = () => {
+    const eventPayload = {
+      ...eventData,
+      questions: questions
+        .filter((q) => q.saved)
+        .map((q) => ({
+          id: q.id,
+          text: q.text,
+          type: q.type,
+          required: q.required,
+          allowMultiSelect: q.allowMultiSelect,
+          options: q.type === "select" ? q.options.filter((opt) => opt.text.trim()) : [],
+        })),
+    }
+
+    console.log("Event data for backend:", eventPayload)
+    // TODO: Send to backend API
   }
 
   const creator = {
@@ -112,7 +185,6 @@ const EventCheckIn: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden" onClick={() => setIsShareModalOpen(true)}>Open Qr Code</button>
           <Link to={'/check-in'} className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Check-In</Link>
           <Link to={'/'} className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer">Dashboard</Link>
           <button
@@ -131,7 +203,7 @@ const EventCheckIn: React.FC = () => {
                 "w-5 h-5 absolute transition-all duration-300 ease-in-out",
                 mobileMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90",)} />
             </div>
-            
+
           </button>
           <img className="rounded-full w-10 h-10 object-cover" src="/profile.png" alt="profile" />
         </div>
@@ -165,90 +237,17 @@ const EventCheckIn: React.FC = () => {
           </div>
 
           {eventData.addQuestions && (
-            <div className="mt-6 space-y-4">
+            <div className="space-y-6 mt-5">
               {questions.map((question, index) => (
-                <div key={question.id} className="mb-4">
-                  {question.saved ? (
-                    //for the backend dev: Saved question after being added from the user 
-                    <div className="mt-6">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900 ">{question.text}</h3>
-                          <p className="text-sm text-gray-900 mb-2">Question {index + 1}</p>
-                          <p className="text-sm text-black">
-                            {question.type === "text" ? "Text Response" : "Select Response"}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => editQuestion(question.id)}
-                          className="text-gray-400 hover:text-gray-600 p-1"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    //for the backend dev: this is the Editing state - full form
-                    <>
-                      <div className="flex justify-end items-center mb-2">
-                        <button
-                          onClick={() => removeQuestion(question.id)}
-                          className="text-gray-400 hover:text-red-500"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-
-                      <input
-                        type="text"
-                        placeholder="Type your question here"
-                        value={question.text}
-                        onChange={(e) => updateQuestion(question.id, { text: e.target.value })}
-                        className="w-full p-2 rounded-md mb-4 focus:border "
-                      />
-
-                      <div className="flex justify-start items-center mb-2">
-                        <div className="text-sm pl-2 -mt-2.5 mb-2 text-gray-900">Question {index + 1}</div>
-
-                      </div>
-
-                      <div className="flex gap-2 mb-4">
-                        <button
-                          onClick={() => updateQuestion(question.id, { type: "text" })}
-                          className={`px-4 py-2 text-sm rounded-md border ${question.type === "text"
-                            ? "bg-gray-900 text-white border-gray-900"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                            }`}
-                        >
-                          Text Response
-                        </button>
-                        <button onClick={() => updateQuestion(question.id, { type: "select" })}
-                          className={`px-4 py-2 text-sm rounded-md border ${question.type === "select"
-                            ? "bg-gray-900 text-white border-gray-900"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"}`}>
-                          Select Response
-                        </button>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Toggle
-                            enabled={question.required}
-                            onChange={(value) => updateQuestion(question.id, { required: value })}
-                          />
-                          <span className="text-sm text-gray-700">Required</span>
-                        </div>
-                        <button
-                          onClick={() => saveQuestion(question.id)}
-                          disabled={!question.text.trim()}
-                          className="px-4 py-1.5 bg-white border border-gray-300 text-gray-800 text-sm rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Save
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
+                <QuestionEditor
+                  key={question.id}
+                  question={question}
+                  questionIndex={index}
+                  onUpdate={updateQuestion}
+                  onRemove={removeQuestion}
+                  onSave={saveQuestion}
+                  onEdit={editQuestion}
+                />
               ))}
 
               <button
@@ -260,9 +259,12 @@ const EventCheckIn: React.FC = () => {
             </div>
           )}
 
-          <div className="mt-6 flex items-center justify-center">
-            <ActionButton onClick={handleSubmit} />
-          </div>
+            <div className="mt-6 flex items-center justify-center">
+            <ActionButton onClick={() => {
+              handleSubmit();
+              setIsShareModalOpen(true);
+            }} />
+            </div>
         </div>
       </div>
 
@@ -315,60 +317,50 @@ const EventCheckIn: React.FC = () => {
 
 
 
-          <div className="flex flex-wrap gap-2 pt-4">
-          <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
-            <DialogTrigger asChild>
-              {/* <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                <Share className="w-4 h-4" />
-                <span>Share</span>
-              </Button> */}
-            </DialogTrigger>
-            <DialogContent className="lg:-mt-28 md:max-w-xl lg:h-[550px]">
-              <DialogHeader>
-                <div className="flex items-center justify-between">
-                  <DialogTitle>{eventData.name}</DialogTitle>
-                  <Button onClick={() => setIsShareModalOpen(false)} variant="outline" size="sm" className="bg-transparent border-none flex items-center space-x-2">
-                    <XIcon className="w-4 h-4" />
-                  </Button>
-                </div>
-                <div className="flex justify-center items-center py-5">
-                  <img className="w-52 h-52" width={200} height={200} src="/qr-code.png" alt="qrcode" />
-                </div>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="share-url" className="font-semibold text-md pl-2">Event Link</Label>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <Input id="share-url" value={shareUrl} readOnly className="flex-1" />
-                    <Button size="sm" onClick={() => navigator.clipboard.writeText(shareUrl)}>
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="share-code" className="font-semibold text-md pl-2">Event Code</Label>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <Input id="share-code" value={'GHK4-P091'} readOnly className="flex-1" />
-                    <Button size="sm">
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="flex justify-center space-x-2">
-                  <Button variant="outline" size="sm" className="bg-black text-white w-2/4 py-1.5 hover:bg-gray-900 hover:text-white">
-                    See Event Details
+      <div className="flex flex-wrap gap-2 pt-4">
+        <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
+          <DialogTrigger asChild>
+          </DialogTrigger>
+          <DialogContent className="lg:-mt-28 md:max-w-xl lg:h-[550px]">
+            <DialogHeader>
+              <div className="flex items-center justify-between">
+                <DialogTitle>{eventData.name}</DialogTitle>
+                <Button onClick={() => setIsShareModalOpen(false)} variant="outline" size="sm" className="bg-transparent border-none flex items-center space-x-2">
+                  <XIcon className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="flex justify-center items-center py-5">
+                <img className="w-52 h-52" width={200} height={200} src="/qr-code.png" alt="qrcode" />
+              </div>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="share-url" className="font-semibold text-md pl-2">Event Link</Label>
+                <div className="flex items-center space-x-2 mt-1">
+                  <Input id="share-url" value={shareUrl} readOnly className="flex-1" />
+                  <Button size="sm" onClick={() => navigator.clipboard.writeText(shareUrl)}>
+                    <Copy className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
-            </DialogContent>
-          </Dialog>
-
-      
-          
-
-       
-  
-        </div>
+              <div>
+                <Label htmlFor="share-code" className="font-semibold text-md pl-2">Event Code</Label>
+                <div className="flex items-center space-x-2 mt-1">
+                  <Input id="share-code" value={'GHK4-P091'} readOnly className="flex-1" />
+                  <Button size="sm">
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="flex justify-center space-x-2">
+                <Button variant="outline" size="sm" className="bg-black text-white w-2/4 py-1.5 hover:bg-gray-900 hover:text-white">
+                  See Event Details
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
     </section>
   )
 }

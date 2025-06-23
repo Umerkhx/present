@@ -17,3 +17,9 @@ export interface EventData {
   location: any;
   addQuestions: boolean;
 }
+
+export interface Option {
+  id: string
+  text: string
+}
+

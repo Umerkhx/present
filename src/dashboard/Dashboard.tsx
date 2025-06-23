@@ -21,7 +21,7 @@ type CardProps = {
 }
 
 const EventCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: string }) => (
-  <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col flex-shrink-0 lg:w-80 w-72">
+  <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col ">
     <div className="flex justify-between items-start mb-2">
       <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
     </div>
@@ -44,8 +44,8 @@ const EventCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: st
   </div>
 )
 
-const GroupCard = ({ id, title, date, by, checkIns}: CardProps & { groupId?: string }) => (
-  <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col flex-shrink-0 lg:w-80 w-72">
+const GroupCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: string }) => (
+  <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col ">
     <div className="flex justify-between items-start mb-2">
       <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
     </div>
@@ -147,19 +147,7 @@ const groupData = [
 ]
 
 function Dashboard() {
-  const {
-    user,
-    previousEvents,
-    upcomingEvents,
-    createdGroups,
-    groupsUsageText,
-    currentPlan,
-    limits,
-    setExportDialogOpen,
-    setExportingGroupName,
-    handleEditGroupModal,
-  } = useAppContext()
-
+  const {user, previousEvents, upcomingEvents, createdGroups, groupsUsageText, currentPlan, setExportDialogOpen, setExportingGroupName, handleEditGroupModal} = useAppContext()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<"events" | "groups">("events")
@@ -235,13 +223,10 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Modal System */}
       <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
 
-      {/* Export Dialog */}
       <ExportDialog />
 
-      {/* Main Content */}
       <div className="p-10">
         <h1 className="text-3xl font-semibold text-zinc-900">Welcome Back, {user.firstName}</h1>
         <div className="flex items-center my-8 gap-3">
@@ -269,21 +254,10 @@ function Dashboard() {
               </div>
             ) : (
               <div className="mt-5">
-                {/* Desktop: Single row horizontal scroll */}
-                <div className="hidden lg:block">
-                  <div className="flex gap-4 overflow-x-auto pb-4">
-                    {sortedPreviousEvents.map((event) => (
-                      <EventCard key={event.id}  {...event} />
-                    ))}
-                  </div>
-                </div>
-                {/* Mobile: Double row */}
-                <div className="lg:hidden">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-x-auto">
-                    {sortedPreviousEvents.map((event) => (
-                      <EventCard key={event.id}  {...event} />
-                    ))}
-                  </div>
+                <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 gap-0">
+                  {sortedPreviousEvents.map((event) => (
+                    <EventCard key={event.id}  {...event} />
+                  ))}
                 </div>
               </div>
             )}
@@ -296,21 +270,11 @@ function Dashboard() {
               </div>
             ) : (
               <div className="mt-5">
-                {/* Desktop: Single row horizontal scroll */}
-                <div className="hidden lg:block">
-                  <div className="flex gap-4 overflow-x-auto pb-4">
-                    {sortedUpcomingEvents.map((event) => (
-                      <EventCard key={event.id}  {...event} />
-                    ))}
-                  </div>
-                </div>
-                {/* Mobile: Double row */}
-                <div className="lg:hidden">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-x-auto">
-                    {sortedUpcomingEvents.map((event) => (
-                      <EventCard key={event.id}  {...event} />
-                    ))}
-                  </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 gap-0">
+                  {sortedUpcomingEvents.map((event) => (
+                    <EventCard key={event.id}  {...event} />
+                  ))}
                 </div>
               </div>
             )}
@@ -318,14 +282,9 @@ function Dashboard() {
         ) : (
           <>
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-2xl px-4 font-semibold text-zinc-900 flex gap-2">
-                {groupsUsageText} <Plus className="text-gray-300" />
-              </h2>
-              <div className="text-sm text-gray-600 px-4">
-                Current Plan: <span className="font-medium capitalize">{currentPlan}</span>
-                {createdGroups.length >= limits.maxGroups && (
-                  <span className="text-amber-600 ml-2">• Limit Reached</span>
-                )}
+              <div className="md:text-2xl text-xl px-4 font-semibold text-zinc-900 flex gap-2">
+                {groupsUsageText}
+                <button className="cursor-pointer " onClick={() => setDialogOpen(true)}> <Plus className="text-gray-300 hover:text-gray-600" /> </button>
               </div>
             </div>
 
@@ -335,18 +294,22 @@ function Dashboard() {
                 <div className="text-zinc-900 font-semibold pt-1 text-center">Create a group here</div>
               </div>
             ) : (
-              <div className="px-4 space-y-8">
-                {groupData.slice(0, createdGroups.length).map((group, idx) => {
+              <div className="lg:px-4 md:space-y-8 space-y-3">
+                {(currentPlan === "free"
+                  ? groupData.slice(0, Math.min(1, createdGroups.length))
+                  : groupData.slice(0, createdGroups.length)
+                ).map((group, idx) => {
                   // Sort group events by date (most recent first)
                   const sortedGroupEvents = [...group.events].sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime())
                   const groupName = createdGroups[idx]?.name || group.groupName
+                  const groupId = createdGroups[idx]?.id || group.groupName
 
                   return (
                     <div key={idx}>
-                      <h3 className="text-2xl font-semibold text-zinc-800 mb-3 gap-2.5 flex items-center">
+                      <h3 className="md:text-2xl text-lg font-semibold text-zinc-800 mb-3 gap-2.5 flex items-center">
                         {groupName}
                         <button
-                          onClick={() => handleEditGroupModal(createdGroups[idx]?.id)}
+                          onClick={() => handleEditGroupModal(groupId)}
                           className="p-1 hover:bg-gray-100 rounded transition-colors"
                         >
                           <Pencil className="w-5 h-5 text-gray-600" />
@@ -358,61 +321,23 @@ function Dashboard() {
                           <Cloud className="w-5 h-5 text-gray-600" />
                         </button>
                       </h3>
-
-                      {/* Desktop: Single row horizontal scroll */}
-                      <div className="hidden lg:block">
-                        <div className="flex gap-4 overflow-x-auto pb-4">
-                          {sortedGroupEvents.map((event) => (
-                            <GroupCard
-                              key={event.id}
-                              id={event.id}
-                              title={event.title}
-                              date={event.date}
-                              by={event.by}
-                              checkIns={event.checkIns}
-                              groupName={groupName}
-                              groupId={createdGroups[idx]?.id}
-                            />
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Mobile: Double row */}
-                      <div className="lg:hidden">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {sortedGroupEvents.map((event) => (
-                            <GroupCard
-                              key={event.id}
-                              id={event.id}
-                              title={event.title}
-                              date={event.date}
-                              by={event.by}
-                              checkIns={event.checkIns}
-                              groupName={groupName}
-                              groupId={createdGroups[idx]?.id}
-                            />
-                          ))}
-                        </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 gap-0 ">
+                        {sortedGroupEvents.map((event) => (
+                          <GroupCard
+                            key={event.id}
+                            id={event.id}
+                            title={event.title}
+                            date={event.date}
+                            by={event.by}
+                            checkIns={event.checkIns}
+                            groupName={groupName}
+                            groupId={groupId}
+                          />
+                        ))}
                       </div>
                     </div>
                   )
                 })}
-
-                {/* Show upgrade message if at limit */}
-                {createdGroups.length >= limits.maxGroups && (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                    <h4 className="font-semibold text-lg text-gray-700 mb-2">Group Limit Reached</h4>
-                    <p className="text-gray-600 mb-4">
-                      You've reached your {currentPlan} plan limit of {limits.maxGroups} groups.
-                    </p>
-                    <button
-                      onClick={() => setDialogOpen(true)}
-                      className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-                    >
-                      Upgrade Plan
-                    </button>
-                  </div>
-                )}
               </div>
             )}
           </>
