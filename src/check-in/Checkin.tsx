@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { CheckinHeader } from "../components/check-in-components/CheckinHeader"
 import { CheckinInfo } from "../components/check-in-components/CheckinInfo"
@@ -132,19 +130,6 @@ export default function EventCheckInPage() {
           required: true,
         },
       ],
-    },
-
-    // Special states for demo
-    alreadyCheckedIn: {
-      name: "MATH 450 Discussion Section A",
-      creator: {
-        name: "Matteo Zamboni",
-        avatar: "/profile.png",
-      },
-      date: "May 9, 2025",
-      timeWindow: "12:20 pm - 3:00 pm",
-      description: "24/25 Fall Semester Math Discussion",
-      checkInType: "open",
     },
 
     unavailable: {

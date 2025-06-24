@@ -8,6 +8,8 @@ interface EventCardMenuProps {
   eventId: string
   eventTitle: string
   groupId?: string
+  isGroupEvent?:boolean
+  onEditClick: () => void;
 }
 
 export default function EventCardMenu({ eventId,  groupId }: EventCardMenuProps) {

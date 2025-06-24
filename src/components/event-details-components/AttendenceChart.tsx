@@ -1,20 +1,13 @@
-import  { useMemo } from 'react';
+import { useMemo } from "react"
+import type { AttendanceChartProps } from "../../types"
 
-interface AttendanceStats {
-  total: number;
-  checkedIn: number;
-  percentage: number;
-}
 
-interface AttendanceChartProps {
-  attendanceStats: AttendanceStats;
-}
 
-export default function AttendanceChart({ attendanceStats }: AttendanceChartProps) {
+export default function AttendanceChart({ attendanceStats, showCount = false }: AttendanceChartProps) {
   const strokeDashoffset = useMemo(() => {
-    const circumference = 251.2;
-    return circumference - (attendanceStats.percentage / 100) * circumference;
-  }, [attendanceStats.percentage]);
+    const circumference = 251.2
+    return circumference - (attendanceStats.percentage / 100) * circumference
+  }, [attendanceStats.percentage])
 
   return (
     <div className="rounded-lg p-6 shadow-sm bg-white">
@@ -43,20 +36,26 @@ export default function AttendanceChart({ attendanceStats }: AttendanceChartProp
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-900">{attendanceStats.percentage}%</span>
+            <span className="text-2xl font-bold text-gray-900">
+              {showCount ? attendanceStats.checkedIn : `${attendanceStats.percentage}%`}
+            </span>
           </div>
         </div>
         <div>
           <p className="font-semibold text-gray-900">
-            {attendanceStats.checkedIn} of {attendanceStats.total} attendees checked in
+            {showCount
+              ? `${attendanceStats.checkedIn} attendees checked in`
+              : `${attendanceStats.checkedIn} of ${attendanceStats.total} attendees checked in`}
           </p>
           <p className="text-sm text-gray-500">
-            {attendanceStats.checkedIn === 0
-              ? "No one has checked-in yet"
-              : `${attendanceStats.checkedIn} attendee${attendanceStats.checkedIn > 1 ? "s" : ""} within time window`}
+            {showCount
+              ? "Between 12:45 and 2:59 pm PST"
+              : attendanceStats.checkedIn === 0
+                ? "No one has checked-in yet"
+                : `${attendanceStats.checkedIn} attendee${attendanceStats.checkedIn > 1 ? "s" : ""} within time window`}
           </p>
         </div>
       </div>
     </div>
-  );
+  )
 }

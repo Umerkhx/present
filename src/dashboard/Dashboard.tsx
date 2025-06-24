@@ -1,7 +1,4 @@
-"use client"
-
 import { AlignJustify, Plus, X, Pencil, Cloud } from "lucide-react"
-import "../App.css"
 import { useState, useMemo } from "react"
 import ModalSystem from "../components/modal-components/modal-system"
 import { Dialog, DialogContent, DialogHeader } from "../components/ui/dialog"
@@ -20,53 +17,77 @@ type CardProps = {
   groupName?: string
 }
 
-const EventCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: string }) => (
-  <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col ">
-    <div className="flex justify-between items-start mb-2">
-      <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
-    </div>
-    <p className="font-medium text-sm pt-1">{date}</p>
-    <p className="font-medium text-sm">By: {by}</p>
-    <div className="flex flex-col flex-grow justify-end pt-5 lg:pt-0">
-      <div className="border border-t w-full border-gray-50"></div>
-      <div className="flex items-start gap-4 pt-3 pb-1">
-        <div>
-          <img className="w-8 h-6" src="/Attendees Icon.png" alt="attendees" />
-        </div>
-        <div className="flex justify-between items-center w-full">
-          <div>{checkIns}</div>
-          <div className="flex items-center gap-2">
-            <EventCardMenu eventId={id} eventTitle={title} />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-)
+const EventCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: string }) => {
+  const [dialogOpen, setDialogOpen] = useState(false)
 
-const GroupCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: string }) => (
-  <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col ">
-    <div className="flex justify-between items-start mb-2">
-      <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
-    </div>
-    <p className="font-medium text-sm pt-1">{date}</p>
-    <p className="font-medium text-sm">By: {by}</p>
-    <div className="flex flex-col flex-grow justify-end pt-5 lg:pt-0">
-      <div className="border border-t w-full border-gray-50"></div>
-      <div className="flex items-start gap-4 pt-3 pb-1">
-        <div>
-          <img className="w-8 h-6" src="/Attendees Icon.png" alt="attendees" />
+  const handleEditClick = () => {
+    setDialogOpen(true)
+  }
+
+  return (
+    <>
+      <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col ">
+        <div className="flex justify-between items-start mb-2">
+          <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
         </div>
-        <div className="flex justify-between items-center w-full">
-          <div>{checkIns}</div>
-          <div className="flex items-center gap-2">
-            <EventCardMenu eventId={id} eventTitle={title} />
+        <p className="font-medium text-sm pt-1">{date}</p>
+        <p className="font-medium text-sm">By: {by}</p>
+        <div className="flex flex-col flex-grow justify-end pt-5 lg:pt-0">
+          <div className="border border-t w-full border-gray-50"></div>
+          <div className="flex items-start gap-4 pt-3 pb-1">
+            <div>
+              <img className="w-8 h-6" src="/Attendees Icon.png" alt="attendees" />
+            </div>
+            <div className="flex justify-between items-center w-full">
+              <div>{checkIns}</div>
+              <div className="flex items-center gap-2">
+                <EventCardMenu eventId={id} eventTitle={title} isGroupEvent={false} onEditClick={handleEditClick} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-)
+
+      <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
+    </>
+  )
+}
+
+const GroupCard = ({ id, title, date, by, checkIns}: CardProps & { groupId?: string }) => {
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const handleEditClick = () => {
+    setDialogOpen(true)
+  }
+
+  return (
+    <>
+      <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col ">
+        <div className="flex justify-between items-start mb-2">
+          <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
+        </div>
+        <p className="font-medium text-sm pt-1">{date}</p>
+        <p className="font-medium text-sm">By: {by}</p>
+        <div className="flex flex-col flex-grow justify-end pt-5 lg:pt-0">
+          <div className="border border-t w-full border-gray-50"></div>
+          <div className="flex items-start gap-4 pt-3 pb-1">
+            <div>
+              <img className="w-8 h-6" src="/Attendees Icon.png" alt="attendees" />
+            </div>
+            <div className="flex justify-between items-center w-full">
+              <div>{checkIns}</div>
+              <div className="flex items-center gap-2">
+                <EventCardMenu eventId={id} eventTitle={title} isGroupEvent={true} onEditClick={handleEditClick} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
+    </>
+  )
+}
 
 // Sample group events data with previous events only
 const groupData = [
@@ -147,7 +168,16 @@ const groupData = [
 ]
 
 function Dashboard() {
-  const {user, previousEvents, upcomingEvents, createdGroups, groupsUsageText, currentPlan, setExportDialogOpen, setExportingGroupName, handleEditGroupModal} = useAppContext()
+  const {
+    user,
+    previousEvents,
+    upcomingEvents,
+    createdGroups,
+    groupsUsageText,
+    currentPlan,
+    setExportDialogOpen,
+    setExportingGroupName,
+  } = useAppContext()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<"events" | "groups">("events")
@@ -172,6 +202,10 @@ function Dashboard() {
   const handleExportGroup = (groupName: string) => {
     setExportingGroupName(groupName)
     setExportDialogOpen(true)
+  }
+
+  const handleEditGroupModal = () => {
+    setDialogOpen(true)
   }
 
   return (
@@ -256,7 +290,7 @@ function Dashboard() {
               <div className="mt-5">
                 <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 gap-0">
                   {sortedPreviousEvents.map((event) => (
-                    <EventCard key={event.id}  {...event} />
+                    <EventCard key={event.id} {...event} />
                   ))}
                 </div>
               </div>
@@ -270,10 +304,9 @@ function Dashboard() {
               </div>
             ) : (
               <div className="mt-5">
-
                 <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 gap-0">
                   {sortedUpcomingEvents.map((event) => (
-                    <EventCard key={event.id}  {...event} />
+                    <EventCard key={event.id} {...event} />
                   ))}
                 </div>
               </div>
@@ -284,7 +317,9 @@ function Dashboard() {
             <div className="flex items-center justify-between mb-5">
               <div className="md:text-2xl text-xl px-4 font-semibold text-zinc-900 flex gap-2">
                 {groupsUsageText}
-                <button className="cursor-pointer " onClick={() => setDialogOpen(true)}> <Plus className="text-gray-300 hover:text-gray-600" /> </button>
+                <button className="cursor-pointer " onClick={() => setDialogOpen(true)}>
+                  <Plus className="text-gray-300 hover:text-gray-600" />
+                </button>
               </div>
             </div>
 
@@ -309,7 +344,7 @@ function Dashboard() {
                       <h3 className="md:text-2xl text-lg font-semibold text-zinc-800 mb-3 gap-2.5 flex items-center">
                         {groupName}
                         <button
-                          onClick={() => handleEditGroupModal(groupId)}
+                          onClick={handleEditGroupModal}
                           className="p-1 hover:bg-gray-100 rounded transition-colors"
                         >
                           <Pencil className="w-5 h-5 text-gray-600" />

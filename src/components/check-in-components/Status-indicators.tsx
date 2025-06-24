@@ -1,4 +1,3 @@
-import { Check, MapPin, Users } from "lucide-react"
 import type { StatusIndicatorsProps } from "../../types"
 
 
@@ -8,11 +7,12 @@ export function StatusIndicators({ event }: StatusIndicatorsProps) {
     <div className="space-y-6">
       {/* Event Type Status */}
       <div className="flex items-start gap-4">
-        <div className="w-6 h-6 border-2 border-gray-400 rounded flex items-center justify-center mt-0.5">
+        <div className="w-6 h-6  rounded flex items-center justify-center mt-0.5">
           {event.checkInType === "open" ? (
-            <Check className="w-4 h-4 text-gray-600" />
+            <img className="w-5 h-5" src="/check-in-icon.png" alt="" />
           ) : (
-            <Users className="w-4 h-4 text-gray-600" />
+            <img className="w-5 h-5" src="/checkin-user-icon.png" alt="" />
+
           )}
         </div>
         <div>
@@ -27,8 +27,8 @@ export function StatusIndicators({ event }: StatusIndicatorsProps) {
 
       {/* Location Status */}
       <div className="flex items-start gap-4">
-        <div className="w-6 h-6 border-2 border-gray-400 rounded flex items-center justify-center mt-0.5">
-          <MapPin className="w-4 h-4 text-gray-600" />
+        <div className="w-6 h-6  rounded flex items-center justify-center mt-0.5">
+          <img className="w-5 h-5" src="/check-in-location.png" alt="" />
         </div>
         <div>
           <p className="font-semibold text-gray-900">

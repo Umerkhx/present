@@ -132,3 +132,70 @@ export interface EventInfoProps{
 export interface StatusIndicatorsProps {
   event: EventConfig
 }
+
+//////event details types
+
+export interface CheckIn {
+    id: number
+    time: string
+    answers?: Record<string, string>
+}
+
+export interface Attendee {
+    id: number
+    firstName: string
+    lastName: string
+    avatar: string
+    avatarColor: string
+    checkedIn: boolean
+    time: string
+    answers?: Record<string, string>
+}
+
+export interface AttendanceStats {
+  total: number
+  checkedIn: number
+  percentage: number
+}
+
+export interface AttendanceChartProps {
+  attendanceStats: AttendanceStats
+  showCount?: boolean
+}
+
+export interface CheckIn {
+  id: number
+  time: string
+  answers?: Record<string, string>
+}
+
+export interface AttendeesSectionProps {
+  checkIns: CheckIn[]
+  showQuestions?: boolean
+  onExportClick: () => void
+}
+
+export interface EventDetailsData {
+  name: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  description: string;
+}
+
+export interface EventDetailsProps {
+  eventData: EventDetailsData;
+  handleEventUpdate: (field: string, value: string) => void;
+  onExportClick: () => void
+}
+
+export interface UpgradedExportModal {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  eventName: string
+  isBlocked: boolean
+  isSuccess: boolean
+  onUpgrade: () => void
+  currentPlan: string
+}
