@@ -15,7 +15,7 @@ export default function UpgradedExportModal({
 }: UpgradedExportModal) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle>Export {eventName}</DialogTitle>
           <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)} className="h-6 w-6 p-0">
