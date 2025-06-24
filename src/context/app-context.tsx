@@ -2,53 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useState, type ReactNode } from "react"
-
-// Types
-type ActiveTab = "profile" | "admin" | "groups" | "subscription"
-type GroupsView = "manage" | "add" | "modal" | "details"
-type SubscriptionPlan = "free" | "plus" | "pro"
-type ViewMode = "initial" | "edit" | "saved"
-
-interface Member {
-  id: number
-  initials: string
-  firstName: string
-  lastName: string
-  bgColor: string
-}
-
-interface TeamMember {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  role: string
-  initials: string
-  bgColor: string
-}
-
-interface Group {
-  id: string
-  name: string
-  memberCount: number
-  members?: Member[]
-}
-
-interface SubscriptionLimits {
-  maxGroups: number
-  maxMembersPerGroup: number
-  maxAdmins: number
-  canExportData: boolean
-}
-
-interface Event {
-  id: string
-  title: string
-  date: string
-  by: string
-  checkIns: string
-  type: "previous" | "upcoming"
-}
+import type { Group, Member, SubscriptionLimits, TeamMember,Event, ActiveTab, GroupsView, SubscriptionPlan, ViewMode } from "../types"
 
 // App Context State Interface
 interface AppContextState {

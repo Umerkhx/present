@@ -321,7 +321,7 @@ const EventCheckIn: React.FC = () => {
         <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
           <DialogTrigger asChild>
           </DialogTrigger>
-          <DialogContent className="lg:-mt-28 md:max-w-xl lg:h-[550px]">
+          <DialogContent className="lg:-mt-12 md:max-w-xl lg:h-[500px]">
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle>{eventData.name}</DialogTitle>
@@ -329,8 +329,8 @@ const EventCheckIn: React.FC = () => {
                   <XIcon className="w-4 h-4" />
                 </Button>
               </div>
-              <div className="flex justify-center items-center py-5">
-                <img className="w-52 h-52" width={200} height={200} src="/qr-code.png" alt="qrcode" />
+              <div className="flex justify-center items-center py-2">
+                <img className="w-44 h-44" width={200} height={200} src="/qr-code.png" alt="qrcode" />
               </div>
             </DialogHeader>
             <div className="space-y-4">
