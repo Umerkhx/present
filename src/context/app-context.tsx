@@ -225,7 +225,6 @@ const initialEvents: Event[] = [
 ]
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [dialogOpen, setDialogOpen] = useState(false)
 
   // User state
   const [user, setUser] = useState({
