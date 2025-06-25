@@ -334,7 +334,7 @@ function Dashboard() {
                   ? groupData.slice(0, Math.min(1, createdGroups.length))
                   : groupData.slice(0, createdGroups.length)
                 ).map((group, idx) => {
-                  // Sort group events by date (most recent first)
+                  //dev reminder: Sort group events by date (most recent first)
                   const sortedGroupEvents = [...group.events].sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime())
                   const groupName = createdGroups[idx]?.name || group.groupName
                   const groupId = createdGroups[idx]?.id || group.groupName

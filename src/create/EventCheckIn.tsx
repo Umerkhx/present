@@ -14,6 +14,7 @@ import { Button } from "../components/ui/button"
 import { Label } from "../components/ui/label"
 import { Input } from "../components/ui/input"
 import QuestionEditor from "../components/create-components/question-editor"
+import ModalSystem from "../components/modal-components/modal-system"
 
 interface Question {
   id: string
@@ -26,6 +27,7 @@ interface Question {
 }
 
 const EventCheckIn: React.FC = () => {
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const shareUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/event/5th-period-english`;
 
@@ -203,9 +205,14 @@ const EventCheckIn: React.FC = () => {
             </div>
 
           </button>
+          <button className="cursor-pointer" onClick={() => setDialogOpen(true)}>
           <img className="rounded-full w-10 h-10 object-cover" src="/profile.png" alt="profile" />
+          </button>
         </div>
       </div>
+
+            <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
+      
 
       <div className="max-w-3xl mx-auto bg-white min-h-screen shadow-sm pb-6">
         <div className="p-4 sm:p-6">
@@ -268,7 +275,6 @@ const EventCheckIn: React.FC = () => {
 
 
 
-      {/*Mobile Menu*/}
       <style>{`
         [data-state="open"][data-radix-collection-item] {
           animation: slideDownAndFade 0.3s ease-out;
