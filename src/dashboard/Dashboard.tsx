@@ -399,12 +399,11 @@ function Dashboard() {
             >
               Check-In
             </Link>
-            <button
+            <Link to={'/create'}
               className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer"
-              onClick={() => setDialogOpen(true)}
             >
               Create
-            </button>
+            </Link>
           </div>
         </DialogContent>
       </Dialog>

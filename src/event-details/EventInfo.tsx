@@ -236,7 +236,6 @@ export default function EventDetailsDemo() {
                 </div>
             </main>
 
-            {/* Export Dialog */}
             <UpgradedExportModal
                 open={exportDialogOpen}
                 onOpenChange={setExportDialogOpen}
