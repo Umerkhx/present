@@ -10,15 +10,15 @@ export function CheckinHeader() {
     return (
         <> <div className="flex flex-wrap items-center justify-between p-4 gap-y-4">
             <div className="flex items-center gap-2">
-                <img src="/logo.png" width={25} height={25} alt="logo" />
-                <span className="font-semibold text-3xl text-zinc-800">Present</span>
-            </div>
+          <img src="/logo.png" width={25} height={25} alt="logo" />
+          <span className="font-extrabold text-3xl text-zinc-800">present</span>
+        </div>
 
             <div className="flex items-center gap-4">
-                <Link to={'/login'} className="w-full px-5 py-3 border border-gray-400 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors lg:block hidden">
+                <Link to={'/login'} className="w-full px-5 py-2 border border-gray-400 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors lg:block hidden">
                     Log-in
                 </Link>
-                <Link to={'/create'} className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer lg:block hidden">
+                <Link to={'/create'} className="w-full px-5 py-2 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer lg:block hidden">
                     Create
                 </Link>
                 <button

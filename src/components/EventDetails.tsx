@@ -22,9 +22,9 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventData, onChange, creato
                     <input
                         type="text"
                         id="eventName"
-                        className="w-full border-b border-gray-300 pb-2 text-gray-800 focus:outline-none focus:border-blue-500"
+                        className="w-full text-3xl placeholder:text-[#B1B1B1] font-bold pb-2 text-gray-800 focus:outline-none focus:border-blue-500"
                         value={eventData.name}
-                        placeholder='Add Name'
+                        placeholder='Add a name'
                         onChange={e => onChange('name', e.target.value)}
                         onBlur={() => eventData.name.trim() && setIsEditingName(false)}
                         autoFocus
@@ -37,7 +37,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventData, onChange, creato
                         <Pencil size={14} className="mr-1" /> Edit </button>
                     </div>
                 )}
-                   <label htmlFor="eventName" className="block text-sm text-gray-600 font-medium mt-1">
+                   <label htmlFor="eventName" className="block text-sm text-gray-800 font-medium mt-1">
                             Event Name
                         </label>
             </div>
@@ -48,18 +48,18 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventData, onChange, creato
                     <img src="/profile.png" alt={creator.name} className="w-full h-full object-cover" />
                 </div>
                 <div>
-                    <p className="font-medium text-gray-900">{creator.name}</p>
-                    <p className="text-sm text-gray-500">Created by</p>
+                    <p className="font-bold text-gray-900">{creator.name}</p>
+                    <p className="text-sm font-semibold text-gray-800">Created by</p>
                 </div>
             </div>
 
             <div className="mt-6 grid lg:grid-cols-2 grid-cols-1 gap-4 items-center">
                 <div className="">
                     <div className="pointer-events-none">
-                        <span className="text-gray-700 text-xl font-semibold">{formattedDate}</span>
+                        <span className="text-gray-700 text-xl font-bold">{formattedDate}</span>
                         <div className="flex items-center gap-2 mb-1">
                             <Calendar size={16} className="text-gray-500" />
-                            <label htmlFor="eventDate" className="text-sm text-gray-700">
+                            <label htmlFor="eventDate" className="text-sm font-medium text-gray-700">
                                 Check-in Date
                             </label>
                         </div>
@@ -79,7 +79,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventData, onChange, creato
                         />
                         <div className="flex items-center gap-2 mb-1">
                             <Clock size={16} className="text-gray-500" />
-                            <label htmlFor="startTime" className="text-sm text-gray-700">
+                            <label htmlFor="startTime" className="text-sm font-semibold text-gray-700">
                                 Check-in start time
                             </label>
                         </div>
@@ -96,7 +96,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventData, onChange, creato
 
                         <div className="flex items-center gap-2 mb-1">
                             <Clock size={16} className="text-gray-500" />
-                            <label htmlFor="endTime" className="text-sm text-gray-700">
+                            <label htmlFor="endTime" className="text-sm font-semibold text-gray-700">
                                 Check-in end time
                             </label>
                         </div>

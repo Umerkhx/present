@@ -1,19 +1,42 @@
 "use client"
 
 import { useState } from "react"
-import { Plus, X, ChevronDown, AlertCircle } from "lucide-react"
+import { Plus, X, AlertCircle } from "lucide-react"
 import { Avatar, AvatarFallback } from "../ui/avatar"
 import { Input } from "../ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { useAppContext } from "../../context/app-context"
+
+type AdditionalField = "id" | "email" | "phone"
+type VerificationMethod = "firstName_lastName" | "id" | "email" | "phone" | "firstName_lastName_id"
+
+const ADDITIONAL_FIELDS: { key: AdditionalField; label: string; placeholder: string }[] = [
+  { key: "id", label: "ID", placeholder: "Student ID" },
+  { key: "email", label: "Email", placeholder: "Email Address" },
+  { key: "phone", label: "Phone", placeholder: "Phone Number" },
+]
+
+const VERIFICATION_OPTIONS: { value: VerificationMethod; label: string }[] = [
+  { value: "firstName_lastName", label: "First Name & Last Name" },
+  { value: "id", label: "ID Only" },
+  { value: "email", label: "Email Only" },
+  { value: "phone", label: "Phone Only" },
+  { value: "firstName_lastName_id", label: "First Name, Last Name & ID" },
+]
 
 export default function ModalGroup() {
   const { groupName, members, setMembers, handleSaveGroup, currentPlan, limits, updateMember } = useAppContext()
 
-  const [hasCustomField, setHasCustomField] = useState(false)
-  const [customFieldName] = useState("New Field")
+  const [activeFields, setActiveFields] = useState<AdditionalField[]>([])
+  const [verificationMethod, setVerificationMethod] = useState<VerificationMethod>("firstName_lastName")
 
   const activeMembersCount = members.filter((m) => m.firstName && m.lastName).length
   const canAddMoreMembers = members.length < limits.maxMembersPerGroup
+
+  // Calculate how many field slots to show (3 initially, then 4, then 5)
+  const totalFieldSlots = Math.min(3 + activeFields.length, 5)
+  const availableFields = ADDITIONAL_FIELDS.filter((field) => !activeFields.includes(field.key))
+  const nextAvailableField = availableFields[0]
 
   const addNewMember = () => {
     if (!canAddMoreMembers) return
@@ -24,8 +47,12 @@ export default function ModalGroup() {
       initials: "",
       firstName: "",
       lastName: "",
+      studentId: "",
+      email: "",
+      phone: "",
       bgColor: "bg-gray-400",
     }
+
     setMembers([...members, newMember])
   }
 
@@ -33,9 +60,36 @@ export default function ModalGroup() {
     setMembers(members.filter((member) => member.id !== id))
   }
 
-  const handleAddCustomField = () => {
-    setHasCustomField(true)
+  const handleAddField = (fieldKey: AdditionalField) => {
+    if (!activeFields.includes(fieldKey) && activeFields.length < 3) {
+      setActiveFields([...activeFields, fieldKey])
+    }
   }
+
+  const getFieldValue = (member: any, fieldKey: AdditionalField) => {
+    switch (fieldKey) {
+      case "id":
+        return member.studentId || ""
+      case "email":
+        return member.email || ""
+      case "phone":
+        return member.phone || ""
+      default:
+        return ""
+    }
+  }
+
+  const updateMemberField = (memberId: number, fieldKey: AdditionalField, value: string) => {
+    const fieldMap = {
+      id: "studentId",
+      email: "email",
+      phone: "phone",
+    }
+    updateMember(memberId, fieldMap[fieldKey] as any, value)
+  }
+
+  // Generate grid columns based on total field slots
+  const gridCols = `40px 60px repeat(${totalFieldSlots}, 1fr)`
 
   return (
     <div className="p-4 w-full max-w-full">
@@ -72,29 +126,48 @@ export default function ModalGroup() {
           : `Upgrade to add more members (${currentPlan === "free" ? "Plus" : "Pro"} plan)`}
       </button>
 
-      <div className="hidden sm:grid sm:grid-cols-[40px_60px_1fr_1fr_1fr] sm:gap-4 mb-4 mt-6">
+      {/* Desktop Header */}
+      <div className="hidden sm:grid sm:gap-4 mb-4 mt-6" style={{ gridTemplateColumns: gridCols }}>
         <div></div>
         <div></div>
         <div className="font-medium text-black">First Name</div>
         <div className="font-medium text-black">Last Name</div>
-        <div className={`font-medium flex items-center gap-2 ${hasCustomField ? "text-black" : "text-gray-400"}`}>
-          <span className="truncate">{customFieldName}</span>
-          {!hasCustomField && (
-            <button className="w-6 h-6 p-0 hover:bg-gray-100 rounded-full" onClick={handleAddCustomField}>
+
+        {/* Show active fields */}
+        {activeFields.map((fieldKey) => {
+          const field = ADDITIONAL_FIELDS.find((f) => f.key === fieldKey)
+          return (
+            <div key={fieldKey} className="font-medium text-black">
+              {field?.label}
+            </div>
+          )
+        })}
+
+        {/* Show next available field slot if we haven't reached the limit */}
+        {activeFields.length < 3 && nextAvailableField && (
+          <div className="font-medium flex items-center gap-2 text-gray-400">
+            <span className="truncate">New Field</span>
+            <button
+              className="w-6 h-6 p-0 hover:bg-gray-100 rounded-full"
+              onClick={() => handleAddField(nextAvailableField.key)}
+            >
               <Plus className="w-4 h-4" />
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
+      {/* Mobile Header */}
       <div className="flex sm:hidden items-center gap-2 mb-2 mt-6">
         <div className="w-8"></div>
         <div className="w-8"></div>
       </div>
 
+      {/* Members List */}
       <div className="space-y-3">
         {members.map((member) => (
-          <div key={member.id} className="flex sm:grid sm:grid-cols-[40px_60px_1fr_1fr_1fr] sm:gap-4 items-center">
+          <div key={member.id} className="flex sm:grid sm:gap-4 items-center" style={{ gridTemplateColumns: gridCols }}>
+            {/* Remove Button */}
             <button
               className="w-6 h-6 sm:w-8 sm:h-8 p-0 hover:bg-gray-100 flex-shrink-0 rounded-full"
               onClick={() => removeMember(member.id)}
@@ -102,83 +175,139 @@ export default function ModalGroup() {
               <X className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
 
+            {/* Avatar */}
             <Avatar className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
               <AvatarFallback className={`${member.bgColor} text-white font-medium text-xs sm:text-sm`}>
                 {member.initials || ""}
               </AvatarFallback>
             </Avatar>
 
+            {/* Mobile Layout with Horizontal Scroll */}
             <div className="flex-1 sm:hidden overflow-x-auto">
-              <div className="flex gap-2 min-w-[400px] pr-4">
-                <div className="flex-1">
+              <div className="flex gap-2 pr-4" style={{ minWidth: `${totalFieldSlots * 130}px` }}>
+                {/* First Name */}
+                <div className="flex-1 min-w-[120px]">
                   <div className="text-xs font-medium text-black mb-1">First Name</div>
                   <Input
-                    placeholder={member.firstName || "First Name"}
+                    placeholder="First Name"
                     value={member.firstName}
                     onChange={(e) => updateMember(member.id, "firstName", e.target.value)}
                     className="border border-gray-300 rounded-md text-sm h-8 w-full"
                   />
                 </div>
-                <div className="flex-1">
+
+                {/* Last Name */}
+                <div className="flex-1 min-w-[120px]">
                   <div className="text-xs font-medium text-black mb-1">Last Name</div>
                   <Input
-                    placeholder={member.lastName || "Last Name"}
+                    placeholder="Last Name"
                     value={member.lastName}
                     onChange={(e) => updateMember(member.id, "lastName", e.target.value)}
                     className="border border-gray-300 rounded-md text-sm h-8 w-full"
                   />
                 </div>
-                <div className="flex-1">
-                  <div className={`text-xs font-medium mb-1 ${hasCustomField ? "text-black" : "text-gray-400"}`}>
-                    {customFieldName}
-                    {!hasCustomField && (
-                      <button className="ml-1 hover:bg-gray-100 rounded-full" onClick={handleAddCustomField}>
+
+                {/* Active Additional Fields */}
+                {activeFields.map((fieldKey) => {
+                  const field = ADDITIONAL_FIELDS.find((f) => f.key === fieldKey)
+                  return (
+                    <div key={fieldKey} className="flex-1 min-w-[120px]">
+                      <div className="text-xs font-medium text-black mb-1">{field?.label}</div>
+                      <Input
+                        placeholder={field?.placeholder}
+                        value={getFieldValue(member, fieldKey)}
+                        onChange={(e) => updateMemberField(member.id, fieldKey, e.target.value)}
+                        className="border border-gray-300 rounded-md text-sm h-8 w-full"
+                      />
+                    </div>
+                  )
+                })}
+
+                {/* Next Available Field Slot for Mobile */}
+                {activeFields.length < 3 && nextAvailableField && (
+                  <div className="flex-1 min-w-[120px]">
+                    <div className="text-xs font-medium text-gray-400 mb-1 flex items-center gap-1">
+                      <span>New Field</span>
+                      <button
+                        className="hover:bg-gray-100 rounded-full"
+                        onClick={() => handleAddField(nextAvailableField.key)}
+                      >
                         <Plus className="w-3 h-3" />
                       </button>
-                    )}
+                    </div>
+                    <Input
+                      placeholder=""
+                      disabled={true}
+                      className="border border-gray-200 bg-gray-50 cursor-not-allowed rounded-md text-sm h-8 w-full"
+                    />
                   </div>
-                  <Input
-                    placeholder=""
-                    disabled={!hasCustomField}
-                    className={`border rounded-md text-sm h-8 w-full ${hasCustomField ? "border-gray-300 bg-white" : "border-gray-200 bg-gray-50 cursor-not-allowed"}`}
-                  />
-                </div>
+                )}
               </div>
             </div>
 
+            {/* Desktop Layout */}
             <div className="hidden sm:block w-full">
               <Input
-                placeholder={member.firstName || "First Name"}
+                placeholder="First Name"
                 value={member.firstName}
                 onChange={(e) => updateMember(member.id, "firstName", e.target.value)}
                 className="border border-gray-300 rounded-md text-base h-10 w-full max-w-[200px]"
               />
             </div>
+
             <div className="hidden sm:block w-full">
               <Input
-                placeholder={member.lastName || "Last Name"}
+                placeholder="Last Name"
                 value={member.lastName}
                 onChange={(e) => updateMember(member.id, "lastName", e.target.value)}
                 className="border border-gray-300 rounded-md text-base h-10 w-full max-w-[200px]"
               />
             </div>
-            <div className="hidden sm:block w-full">
-              <Input
-                placeholder=""
-                disabled={!hasCustomField}
-                className={`border rounded-md text-base h-10 w-full max-w-[200px] ${hasCustomField ? "border-gray-300 bg-white" : "border-gray-200 bg-gray-50 cursor-not-allowed"}`}
-              />
-            </div>
+
+            {/* Desktop Active Additional Fields */}
+            {activeFields.map((fieldKey) => {
+              const field = ADDITIONAL_FIELDS.find((f) => f.key === fieldKey)
+              return (
+                <div key={fieldKey} className="hidden sm:block w-full">
+                  <Input
+                    placeholder={field?.placeholder}
+                    value={getFieldValue(member, fieldKey)}
+                    onChange={(e) => updateMemberField(member.id, fieldKey, e.target.value)}
+                    className="border border-gray-300 rounded-md text-base h-10 w-full max-w-[200px]"
+                  />
+                </div>
+              )
+            })}
+
+            {/* Desktop Next Available Field Slot */}
+            {activeFields.length < 3 && nextAvailableField && (
+              <div className="hidden sm:block w-full">
+                <Input
+                  placeholder=""
+                  disabled={true}
+                  className="border border-gray-200 bg-gray-50 cursor-not-allowed rounded-md text-base h-10 w-full max-w-[200px]"
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>
 
+      {/* Group Member Verification */}
       <div className="mt-6 sm:mt-8">
         <h4 className="text-start font-semibold text-black mb-2 text-sm sm:text-base">Group member verification</h4>
-        <button className="flex items-center gap-2 text-black font-medium p-0 h-auto hover:bg-transparent text-sm sm:text-base">
-          First Name & Last Name
-          <ChevronDown className="w-4 h-4" />
-        </button>
+        <Select value={verificationMethod} onValueChange={(value: VerificationMethod) => setVerificationMethod(value)}>
+          <SelectTrigger className="w-auto bg-transparent border-none p-0 h-auto hover:bg-transparent text-sm sm:text-base font-medium">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {VERIFICATION_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <button

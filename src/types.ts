@@ -34,6 +34,9 @@ export interface Member {
   initials: string
   firstName: string
   lastName: string
+  studentId?: string
+  email?: string
+  phone?: string
   bgColor: string
 }
 

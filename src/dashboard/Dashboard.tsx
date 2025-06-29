@@ -209,12 +209,12 @@ function Dashboard() {
   }
 
   return (
-    <section className="container mx-auto">
+    <section className=" mx-auto">
       {/* Header */}
       <div className="gradient-bar flex flex-wrap items-center justify-between py-16 px-10 gap-y-4">
-        <div className="flex items-center gap-2">
+         <div className="flex items-center gap-2">
           <img src="/logo.png" width={25} height={25} alt="logo" />
-          <span className="font-semibold text-3xl text-zinc-800">Present</span>
+          <span className="font-extrabold text-3xl text-zinc-800">present</span>
         </div>
         <div className="flex items-center gap-4">
           <Link to="/check-in" className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">
@@ -222,7 +222,7 @@ function Dashboard() {
           </Link>
           <Link
             to="/create"
-            className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-150 duration-150 cursor-pointer"
+            className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-zinc-700  transition ease-in delay-150 duration-150 cursor-pointer"
           >
             Create
           </Link>

@@ -1,5 +1,5 @@
 "use client"
-import { MoreHorizontal, Eye, Edit, Trash2 } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { useAppContext } from "../../context/app-context"
 
@@ -8,11 +8,11 @@ interface EventCardMenuProps {
   eventId: string
   eventTitle: string
   groupId?: string
-  isGroupEvent?:boolean
+  isGroupEvent?: boolean
   onEditClick: () => void;
 }
 
-export default function EventCardMenu({ eventId,  groupId }: EventCardMenuProps) {
+export default function EventCardMenu({ eventId, groupId }: EventCardMenuProps) {
   const { handleEditGroupModal } = useAppContext()
 
   const handleViewDetails = () => {
@@ -45,20 +45,20 @@ export default function EventCardMenu({ eventId,  groupId }: EventCardMenuProps)
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem onClick={handleViewDetails} className="flex items-center gap-2">
-          <Eye className="w-4 h-4" />
-          View Details
+          <img src="/dashboard-share-icon.png" className="w-4 h-4" alt="share" />
+          Share
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleEdit} className="flex items-center gap-2">
-          <Edit className="w-4 h-4" />
-          Edit Event
+          <img src="/dashboard-edit-icon.png" className="w-4 h-4" alt="edit" />
+          Edit
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleEditGroup} className="flex items-center gap-2">
-          <Edit className="w-4 h-4" />
-          Edit Group
+          <img src="/dashboard-copy-icon.png" className="w-4 h-4" alt="edit" />
+          Duplicate
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete} className="flex items-center gap-2 text-red-600">
-          <Trash2 className="w-4 h-4" />
-          Delete Event
+        <DropdownMenuItem onClick={handleDelete} className="flex items-center gap-2 ">
+          <img src="/dashboard-delete-icon.png" className="w-4 h-4" alt="edit" />
+          Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -6,11 +6,11 @@ const LocationSelector = () => {
         <input
           type="text"
           placeholder="Search for a location"
-          className="w-full  border-gray-300 pb-2 pl-8 text-gray-800 focus:outline-none focus:border-blue-500"
+          className="w-full  border-gray-300 font-bold text-xl pb-2 placeholder:text-[#B1B1B1] text-gray-800 focus:outline-none focus:border-blue-500"
         />
         <button
           type="button"
-          className="absolute right-0 top-0 bg-white text-zinc-900 border border-gray-400 px-4 py-1.5 text-sm  rounded-lg  transition-colors"
+          className="absolute font-semibold right-0 top-0 bg-white text-zinc-900 border border-gray-400 px-4 py-1.5 text-sm  rounded-lg  transition-colors"
         >
           Use my Location
         </button>

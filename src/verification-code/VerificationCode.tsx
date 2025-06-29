@@ -34,9 +34,9 @@ function VerificationCode() {
   return (
     <section className="container mx-auto p-5 min-h-screen flex flex-col">
       <div className="flex flex-wrap items-center justify-between p-4 gap-y-4">
-        <div className="flex items-center gap-2">
+     <div className="flex items-center gap-2">
           <img src="/logo.png" width={25} height={25} alt="logo" />
-          <span className="font-semibold text-3xl text-zinc-800">Present</span>
+          <span className="font-extrabold text-3xl text-zinc-800">present</span>
         </div>
 
         <div className="flex items-center gap-4">

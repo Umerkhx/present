@@ -2,7 +2,17 @@
 
 import type React from "react"
 import { createContext, useContext, useState, type ReactNode } from "react"
-import type { Group, Member, SubscriptionLimits, TeamMember,Event, ActiveTab, GroupsView, SubscriptionPlan, ViewMode } from "../types"
+import type {
+  Group,
+  Member,
+  SubscriptionLimits,
+  TeamMember,
+  Event,
+  ActiveTab,
+  GroupsView,
+  SubscriptionPlan,
+  ViewMode,
+} from "../types"
 
 // App Context State Interface
 interface AppContextState {
@@ -225,7 +235,6 @@ const initialEvents: Event[] = [
 ]
 
 export function AppProvider({ children }: { children: ReactNode }) {
-
   // User state
   const [user, setUser] = useState({
     firstName: "Matteo",
@@ -243,13 +252,48 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [selectedImage, setSelectedImage] = useState(profileImages[0])
   const [profileSaved, setProfileSaved] = useState(false)
 
-  // Group states (App-wide)
   const [groupName, setGroupName] = useState("")
   const [members, setMembers] = useState<Member[]>([
-    { id: 1, initials: "MM", firstName: "Marilyn", lastName: "Monroe", bgColor: "bg-purple-400" },
-    { id: 2, initials: "TB", firstName: "Tom", lastName: "Brady", bgColor: "bg-cyan-400" },
-    { id: 3, initials: "GC", firstName: "George", lastName: "Clooney", bgColor: "bg-green-400" },
-    { id: 4, initials: "", firstName: "", lastName: "", bgColor: "bg-gray-400" },
+    {
+      id: 1,
+      initials: "MM",
+      firstName: "Marilyn",
+      lastName: "Monroe",
+      studentId: "",
+      email: "",
+      phone: "",
+      bgColor: "bg-purple-400",
+    },
+    {
+      id: 2,
+      initials: "TB",
+      firstName: "Tom",
+      lastName: "Brady",
+      studentId: "",
+      email: "",
+      phone: "",
+      bgColor: "bg-cyan-400",
+    },
+    {
+      id: 3,
+      initials: "GC",
+      firstName: "George",
+      lastName: "Clooney",
+      studentId: "",
+      email: "",
+      phone: "",
+      bgColor: "bg-green-400",
+    },
+    {
+      id: 4,
+      initials: "",
+      firstName: "",
+      lastName: "",
+      studentId: "",
+      email: "",
+      phone: "",
+      bgColor: "bg-gray-400",
+    },
   ])
 
   // Initialize with sample groups based on the dashboard
@@ -275,7 +319,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const upcomingEvents = events.filter((event) => event.type === "upcoming")
 
   // Subscription states (App-wide)
-  const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>("plus") // Changed to plus to match dashboard showing 2/5
+  const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan>("plus")
   const limits = subscriptionLimits[currentPlan]
 
   // Admin/Team states
@@ -291,6 +335,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     initials: "MZ",
     bgColor: "bg-orange-400",
   })
+
   const [admins, setAdmins] = useState<TeamMember[]>([
     {
       id: "1",
@@ -329,6 +374,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       bgColor: "bg-gray-400",
     },
   ])
+
   const [savedAdmins, setSavedAdmins] = useState<TeamMember[]>([])
   const [savedTeamData, setSavedTeamData] = useState<{ teamName: string; accountOwner: TeamMember } | null>(null)
   const [showInvitationDialog, setShowInvitationDialog] = useState(false)
@@ -515,13 +561,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // User
     user,
     setUser,
-
     // Navigation (Modal)
     activeTab,
     setActiveTab,
     groupsView,
     setGroupsView,
-
     // Profile (Modal)
     formData,
     setFormData,
@@ -529,7 +573,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSelectedImage,
     profileSaved,
     setProfileSaved,
-
     // Groups (App-wide)
     groupName,
     setGroupName,
@@ -541,19 +584,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setEditingGroupId,
     viewingGroupId,
     setViewingGroupId,
-
     // Events (App-wide)
     events,
     setEvents,
     previousEvents,
     upcomingEvents,
-
     // Subscription (App-wide)
     currentPlan,
     setCurrentPlan,
     limits,
     getPlanDisplayName,
-
     // Admin/Team
     viewMode,
     setViewMode,
@@ -571,7 +611,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSavedTeamData,
     showInvitationDialog,
     setShowInvitationDialog,
-
     // Export states
     exportDialogOpen,
     setExportDialogOpen,
@@ -585,11 +624,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setIncludeCheckInResponses,
     exportingGroupName,
     setExportingGroupName,
-
     // Computed values
     canAddMoreGroups,
     groupsUsageText,
-
     // Actions
     handleProfileSubmit,
     handleFileUpload,

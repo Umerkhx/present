@@ -1,3 +1,5 @@
+"use client"
+
 import { AlignJustify, X, XIcon, Copy } from "lucide-react"
 import type React from "react"
 import { useState, useEffect } from "react"
@@ -28,8 +30,8 @@ interface Question {
 
 const EventCheckIn: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const shareUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/event/5th-period-english`;
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const shareUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/event/5th-period-english`
 
   const [eventData, setEventData] = useState<EventData>({
     name: "",
@@ -92,15 +94,12 @@ const EventCheckIn: React.FC = () => {
     }
   }, [eventData.addQuestions, questions.length])
 
-
   const handleChange = (name: string, value: any) => {
     setEventData({
       ...eventData,
       [name]: value,
     })
   }
-
-
 
   const updateQuestion = (id: string, updates: Partial<Question>) => {
     setQuestions(questions.map((q) => (q.id === id ? { ...q, ...updates } : q)))
@@ -126,7 +125,6 @@ const EventCheckIn: React.FC = () => {
     setQuestions([...questions, newQuestion])
   }
 
-
   const saveQuestion = (id: string) => {
     const question = questions.find((q) => q.id === id)
     if (question && question.text.trim()) {
@@ -151,8 +149,6 @@ const EventCheckIn: React.FC = () => {
     updateQuestion(id, { saved: false })
   }
 
-
-
   const handleSubmit = () => {
     const eventPayload = {
       ...eventData,
@@ -167,7 +163,6 @@ const EventCheckIn: React.FC = () => {
           options: q.type === "select" ? q.options.filter((opt) => opt.text.trim()) : [],
         })),
     }
-
     console.log("Event data for backend:", eventPayload)
     // TODO: Send to backend API
   }
@@ -177,16 +172,23 @@ const EventCheckIn: React.FC = () => {
   }
 
   return (
-    <section className="container mx-auto p-5">
+    <section className=" mx-auto p-5">
       <div className="flex flex-wrap items-center justify-between p-4 gap-y-4">
         <div className="flex items-center gap-2">
           <img src="/logo.png" width={25} height={25} alt="logo" />
-          <span className="font-semibold text-3xl text-zinc-800">Present</span>
+          <span className="font-extrabold text-3xl text-zinc-800">present</span>
         </div>
 
         <div className="flex items-center gap-4">
-          <Link to={'/check-in'} className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">Check-In</Link>
-          <Link to={'/'} className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer">Dashboard</Link>
+          <Link to={"/check-in"} className="px-5 py-1.5 font-semibold border border-gray-500 rounded-lg md:block hidden">
+            Check-In
+          </Link>
+          <Link
+            to={"/"}
+            className="px-5 py-1.5 font-semibold bg-transparent border border-gray-500 rounded-lg md:block hidden  transition ease-in delay-100 duration-150 cursor-pointer"
+          >
+            Dashboard
+          </Link>
           <button
             className="rounded-lg p-1.5 border border-gray-400 md:hidden block relative z-50"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -198,21 +200,24 @@ const EventCheckIn: React.FC = () => {
                 className={cn(
                   "w-5 h-5 absolute transition-all duration-300 ease-in-out",
                   mobileMenuOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0",
-                )} />
-              <X className={cn(
-                "w-5 h-5 absolute transition-all duration-300 ease-in-out",
-                mobileMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90",)} />
+                )}
+              />
+              <X
+                className={cn(
+                  "w-5 h-5 absolute transition-all duration-300 ease-in-out",
+                  mobileMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90",
+                )}
+              />
             </div>
-
           </button>
+
           <button className="cursor-pointer" onClick={() => setDialogOpen(true)}>
-          <img className="rounded-full w-10 h-10 object-cover" src="/profile.png" alt="profile" />
+            <img className="rounded-full w-10 h-10 object-cover" src="/profile.png" alt="profile" />
           </button>
         </div>
       </div>
 
-            <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
-      
+      <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
 
       <div className="max-w-3xl mx-auto bg-white min-h-screen shadow-sm pb-6">
         <div className="p-4 sm:p-6">
@@ -228,10 +233,10 @@ const EventCheckIn: React.FC = () => {
           <LocationSelector />
 
           <div className="mt-4">
-            <p className="text-sm text-gray-700 mb-2">
-              Attendees must be this close to check-in: <span className="font-medium">{eventData.radius} ft</span>
+            <p className="text-sm font-semibold text-gray-700 mb-2">
+              Attendees must be this close to check-in: <span className="font-bold">{eventData.radius} ft</span>
             </p>
-            <p className="text-xs text-gray-500 mb-4">Check-in radius</p>
+            <p className="text-xs font-semibold text-gray-500 mb-4">Check-in radius</p>
           </div>
 
           <div className="flex items-center gap-4 pt-4 border-t">
@@ -254,7 +259,6 @@ const EventCheckIn: React.FC = () => {
                   onEdit={editQuestion}
                 />
               ))}
-
               <button
                 onClick={addQuestion}
                 className="w-full py-1 border-2  border-gray-300 rounded-lg text-sm text-gray-600 hover:border-gray-400 hover:text-gray-700 transition-colors"
@@ -264,16 +268,16 @@ const EventCheckIn: React.FC = () => {
             </div>
           )}
 
-            <div className="mt-6 flex items-center justify-center">
-            <ActionButton onClick={() => {
-              handleSubmit();
-              setIsShareModalOpen(true);
-            }} />
-            </div>
+          <div className="mt-6 flex items-center justify-center">
+            <ActionButton
+              onClick={() => {
+                handleSubmit()
+                setIsShareModalOpen(true)
+              }}
+            />
+          </div>
         </div>
       </div>
-
-
 
       <style>{`
         [data-state="open"][data-radix-collection-item] {
@@ -292,25 +296,27 @@ const EventCheckIn: React.FC = () => {
         }
       `}</style>
 
-
       <Dialog open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
         <DialogContent className="sm:max-w-md w-[95vw] p-0 m-0 fixed top-4 left-1/2 transform -translate-x-1/2 translate-y-0">
           <DialogHeader className="p-4 pb-0">
             <div className="flex justify-end items-center">
-
-              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-500 hover:text-gray-700 p-1 cursor-pointer">
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-gray-500 hover:text-gray-700 p-1 cursor-pointer"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
           </DialogHeader>
-
           <div className="p-4 space-y-3 flex flex-col items-center">
-            <Link to={'/check-in'}
+            <Link
+              to={"/check-in"}
               className="w-full px-5 py-3 border border-gray-400 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors"
             >
               Check-In
             </Link>
-            <Link to={'/'}
+            <Link
+              to={"/"}
               className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer"
             >
               Dashboard
@@ -319,17 +325,19 @@ const EventCheckIn: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-
-
       <div className="flex flex-wrap gap-2 pt-4">
         <Dialog open={isShareModalOpen} onOpenChange={setIsShareModalOpen}>
-          <DialogTrigger asChild>
-          </DialogTrigger>
+          <DialogTrigger asChild></DialogTrigger>
           <DialogContent className="lg:-mt-12 md:max-w-xl lg:h-[500px]">
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle>{eventData.name}</DialogTitle>
-                <Button onClick={() => setIsShareModalOpen(false)} variant="outline" size="sm" className="bg-transparent border-none flex items-center space-x-2">
+                <Button
+                  onClick={() => setIsShareModalOpen(false)}
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent border-none flex items-center space-x-2"
+                >
                   <XIcon className="w-4 h-4" />
                 </Button>
               </div>
@@ -339,7 +347,9 @@ const EventCheckIn: React.FC = () => {
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="share-url" className="font-semibold text-md pl-2">Event Link</Label>
+                <Label htmlFor="share-url" className="font-semibold text-md pl-2">
+                  Event Link
+                </Label>
                 <div className="flex items-center space-x-2 mt-1">
                   <Input id="share-url" value={shareUrl} readOnly className="flex-1" />
                   <Button size="sm" onClick={() => navigator.clipboard.writeText(shareUrl)}>
@@ -348,16 +358,22 @@ const EventCheckIn: React.FC = () => {
                 </div>
               </div>
               <div>
-                <Label htmlFor="share-code" className="font-semibold text-md pl-2">Event Code</Label>
+                <Label htmlFor="share-code" className="font-semibold text-md pl-2">
+                  Event Code
+                </Label>
                 <div className="flex items-center space-x-2 mt-1">
-                  <Input id="share-code" value={'GHK4-P091'} readOnly className="flex-1" />
+                  <Input id="share-code" value={"GHK4-P091"} readOnly className="flex-1" />
                   <Button size="sm">
                     <Copy className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
               <div className="flex justify-center space-x-2">
-                <Button variant="outline" size="sm" className="bg-black text-white w-2/4 py-1.5 hover:bg-gray-900 hover:text-white">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-black text-white w-2/4 py-1.5 hover:bg-gray-900 hover:text-white"
+                >
                   See Event Details
                 </Button>
               </div>

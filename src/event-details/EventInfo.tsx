@@ -150,12 +150,12 @@ export default function EventDetailsDemo() {
     const showCount = demoVersion.includes("open") && !demoVersion.includes("advanced")
 
     return (
-        <div className=" xl:max-w-screen-7xl lg:max-w-screen-2xl md:max-screen-xl sm:max-w-screen-lg max-w-screen-md mx-auto ">
+        <div className="  mx-auto ">
             <header className="px-4 py-5 lg:px-8">
                 <div className="flex items-center justify-between mx-auto">
                     <div className="flex items-center space-x-2">
                         <img src="/logo.png" width={25} height={25} alt="logo" />
-                        <span className="text-2xl font-semibold text-black">present</span>
+                        <span className="text-2xl font-extrabold text-black">present</span>
 
 
                         <div className="flex items-center gap-4">
