@@ -1,12 +1,16 @@
-import { AlignJustify, Plus, X, Pencil, Cloud } from "lucide-react"
+"use client"
+
+import { AlignJustify, Plus, X, Pencil, Cloud, ChevronRight } from "lucide-react"
 import { useState, useMemo } from "react"
 import ModalSystem from "../components/modal-components/modal-system"
-import { Dialog, DialogContent, DialogHeader } from "../components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog"
+import { Button } from "../components/ui/button"
 import { Link } from "react-router-dom"
 import { cn } from "../lib/utils"
 import { useAppContext } from "../context/app-context"
 import EventCardMenu from "../components/group-export-dialog/event-menu"
 import ExportDialog from "../components/group-export-dialog/export-dialog"
+import { Carousel, CarouselContent, CarouselItem } from "../components/ui/carousel"
 
 type CardProps = {
   id: string
@@ -26,20 +30,20 @@ const EventCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: st
 
   return (
     <>
-      <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col ">
+      <div className="rounded-lg border border-gray-300 md:h-[250px] h-[260px] p-3 flex flex-col">
         <div className="flex justify-between items-start mb-2">
-          <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
+          <p className="font-bold md:text-xl text-base text-black flex-1 pr-2">{title}</p>
         </div>
         <p className="font-medium text-sm pt-1">{date}</p>
         <p className="font-medium text-sm">By: {by}</p>
-        <div className="flex flex-col flex-grow justify-end pt-5 lg:pt-0">
+        <div className="flex flex-col flex-grow justify-end pt-5">
           <div className="border border-t w-full border-gray-50"></div>
           <div className="flex items-start gap-4 pt-3 pb-1">
             <div>
-              <img className="w-8 h-6" src="/Attendees Icon.png" alt="attendees" />
+              <img className="md:w-8 md:h-6 w-6 h-4" src="/Attendees Icon.png" alt="attendees" />
             </div>
             <div className="flex justify-between items-center w-full">
-              <div>{checkIns}</div>
+              <div className="md:text-sm text-xs font-semibold">{checkIns}</div>
               <div className="flex items-center gap-2">
                 <EventCardMenu eventId={id} eventTitle={title} isGroupEvent={false} onEditClick={handleEditClick} />
               </div>
@@ -47,13 +51,12 @@ const EventCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: st
           </div>
         </div>
       </div>
-
       <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
     </>
   )
 }
 
-const GroupCard = ({ id, title, date, by, checkIns}: CardProps & { groupId?: string }) => {
+const GroupCard = ({ id, title, date, by, checkIns }: CardProps & { groupId?: string }) => {
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleEditClick = () => {
@@ -62,20 +65,20 @@ const GroupCard = ({ id, title, date, by, checkIns}: CardProps & { groupId?: str
 
   return (
     <>
-      <div className="rounded-lg border border-gray-300 lg:h-[250px] p-3 my-5 flex flex-col ">
+      <div className="rounded-lg border border-gray-300 md:h-[250px] h-[260px] p-3 flex flex-col">
         <div className="flex justify-between items-start mb-2">
-          <p className="font-semibold md:text-xl text-lg text-black flex-1 pr-2">{title}</p>
+          <p className="font-bold md:text-xl text-base text-black flex-1 pr-2">{title}</p>
         </div>
         <p className="font-medium text-sm pt-1">{date}</p>
         <p className="font-medium text-sm">By: {by}</p>
-        <div className="flex flex-col flex-grow justify-end pt-5 lg:pt-0">
+        <div className="flex flex-col flex-grow justify-end pt-5">
           <div className="border border-t w-full border-gray-50"></div>
           <div className="flex items-start gap-4 pt-3 pb-1">
             <div>
-              <img className="w-8 h-6" src="/Attendees Icon.png" alt="attendees" />
+              <img className="md:w-8 md:h-6 w-6 h-4" src="/Attendees Icon.png" alt="attendees" />
             </div>
             <div className="flex justify-between items-center w-full">
-              <div>{checkIns}</div>
+              <div className="md:text-sm text-xs font-semibold">{checkIns}</div>
               <div className="flex items-center gap-2">
                 <EventCardMenu eventId={id} eventTitle={title} isGroupEvent={true} onEditClick={handleEditClick} />
               </div>
@@ -83,13 +86,73 @@ const GroupCard = ({ id, title, date, by, checkIns}: CardProps & { groupId?: str
           </div>
         </div>
       </div>
-
       <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
     </>
   )
 }
 
-// Sample group events data with previous events only
+const EventsModal = ({
+  isOpen,
+  onClose,
+  events,
+  title,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  events: CardProps[]
+  title: string
+}) => {
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">{title}</DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-1 md:grid-cols-2  gap-4 mt-4">
+          {events.map((event) => (
+            <EventCard key={event.id} {...event} />
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+const GroupHistoryModal = ({
+  isOpen,
+  onClose,
+  groupName,
+  events,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  groupName: string
+  events: any[]
+}) => {
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className=" max-w-3xl max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">{groupName} - Event History</DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-1 md:grid-cols-2  gap-4 mt-4">
+          {events.map((event) => (
+            <GroupCard
+              key={event.id}
+              id={event.id}
+              title={event.title}
+              date={event.date}
+              by={event.by}
+              checkIns={event.checkIns}
+              groupName={groupName}
+            />
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 const groupData = [
   {
     groupName: "AP English (2nd Period 24-25)",
@@ -125,6 +188,110 @@ const groupData = [
         by: "Penny Smith",
         checkIns: "18 Check-Ins",
         dateObj: new Date("2025-03-20"),
+      },
+      {
+        id: "g1-5",
+        title: "AP English 2nd Period 2/28/25",
+        date: "Feb 28, 2025",
+        by: "Penny Smith",
+        checkIns: "21 Check-Ins",
+        dateObj: new Date("2025-02-28"),
+      },
+      {
+        id: "g1-6",
+        title: "AP English 2nd Period 2/14/25",
+        date: "Feb 14, 2025",
+        by: "Penny Smith",
+        checkIns: "20 Check-Ins",
+        dateObj: new Date("2025-02-14"),
+      },
+      {
+        id: "g1-7",
+        title: "AP English 2nd Period 1/30/25",
+        date: "Jan 30, 2025",
+        by: "Penny Smith",
+        checkIns: "19 Check-Ins",
+        dateObj: new Date("2025-01-30"),
+      },
+      {
+        id: "g1-8",
+        title: "AP English 2nd Period 1/15/25",
+        date: "Jan 15, 2025",
+        by: "Penny Smith",
+        checkIns: "22 Check-Ins",
+        dateObj: new Date("2025-01-15"),
+      },
+      {
+        id: "g1-9",
+        title: "AP English 2nd Period 12/20/24",
+        date: "Dec 20, 2024",
+        by: "Penny Smith",
+        checkIns: "20 Check-Ins",
+        dateObj: new Date("2024-12-20"),
+      },
+      {
+        id: "g1-10",
+        title: "AP English 2nd Period 12/5/24",
+        date: "Dec 5, 2024",
+        by: "Penny Smith",
+        checkIns: "21 Check-Ins",
+        dateObj: new Date("2024-12-05"),
+      },
+      {
+        id: "g1-11",
+        title: "AP English 2nd Period 11/18/24",
+        date: "Nov 18, 2024",
+        by: "Penny Smith",
+        checkIns: "18 Check-Ins",
+        dateObj: new Date("2024-11-18"),
+      },
+      {
+        id: "g1-12",
+        title: "AP English 2nd Period 11/1/24",
+        date: "Nov 1, 2024",
+        by: "Penny Smith",
+        checkIns: "20 Check-Ins",
+        dateObj: new Date("2024-11-01"),
+      },
+      {
+        id: "g1-13",
+        title: "AP English 2nd Period 10/15/24",
+        date: "Oct 15, 2024",
+        by: "Penny Smith",
+        checkIns: "19 Check-Ins",
+        dateObj: new Date("2024-10-15"),
+      },
+      {
+        id: "g1-14",
+        title: "AP English 2nd Period 10/1/24",
+        date: "Oct 1, 2024",
+        by: "Penny Smith",
+        checkIns: "21 Check-Ins",
+        dateObj: new Date("2024-10-01"),
+      },
+      {
+        id: "g1-15",
+        title: "AP English 2nd Period 9/15/24",
+        date: "Sep 15, 2024",
+        by: "Penny Smith",
+        checkIns: "20 Check-Ins",
+        dateObj: new Date("2024-09-15"),
+      },
+      {
+        id: "g1-16",
+        title: "AP English 2nd Period 9/1/24",
+        date: "Sep 1, 2024",
+        by: "Penny Smith",
+        checkIns: "22 Check-Ins",
+        dateObj: new Date("2024-09-01"),
+      },
+      {
+        id: "g1-17",
+        title: "AP English 2nd Period 9/1/24",
+        date: "Sep 1, 2024",
+        by: "Penny Smith",
+        checkIns: "22 Check-Ins",
+        dateObj: new Date("2024-09-01"),
       },
     ],
   },
@@ -163,6 +330,102 @@ const groupData = [
         checkIns: "18 Check-Ins",
         dateObj: new Date("2025-03-20"),
       },
+      {
+        id: "g2-5",
+        title: "Freshman English 4th Period 2/28/25",
+        date: "Feb 28, 2025",
+        by: "Penny Smith",
+        checkIns: "19 Check-Ins",
+        dateObj: new Date("2025-02-28"),
+      },
+      {
+        id: "g2-6",
+        title: "Freshman English 4th Period 2/14/25",
+        date: "Feb 14, 2025",
+        by: "Penny Smith",
+        checkIns: "20 Check-Ins",
+        dateObj: new Date("2025-02-14"),
+      },
+      {
+        id: "g2-7",
+        title: "Freshman English 4th Period 1/30/25",
+        date: "Jan 30, 2025",
+        by: "Penny Smith",
+        checkIns: "18 Check-Ins",
+        dateObj: new Date("2025-01-30"),
+      },
+      {
+        id: "g2-8",
+        title: "Freshman English 4th Period 1/15/25",
+        date: "Jan 15, 2025",
+        by: "Penny Smith",
+        checkIns: "21 Check-Ins",
+        dateObj: new Date("2025-01-15"),
+      },
+      {
+        id: "g2-9",
+        title: "Freshman English 4th Period 12/20/24",
+        date: "Dec 20, 2024",
+        by: "Penny Smith",
+        checkIns: "20 Check-Ins",
+        dateObj: new Date("2024-12-20"),
+      },
+      {
+        id: "g2-10",
+        title: "Freshman English 4th Period 12/5/24",
+        date: "Dec 5, 2024",
+        by: "Penny Smith",
+        checkIns: "19 Check-Ins",
+        dateObj: new Date("2024-12-05"),
+      },
+      {
+        id: "g2-11",
+        title: "Freshman English 4th Period 11/18/24",
+        date: "Nov 18, 2024",
+        by: "Penny Smith",
+        checkIns: "18 Check-Ins",
+        dateObj: new Date("2024-11-18"),
+      },
+      {
+        id: "g2-12",
+        title: "Freshman English 4th Period 11/1/24",
+        date: "Nov 1, 2024",
+        by: "Penny Smith",
+        checkIns: "20 Check-Ins",
+        dateObj: new Date("2024-11-01"),
+      },
+      {
+        id: "g2-13",
+        title: "Freshman English 4th Period 10/15/24",
+        date: "Oct 15, 2024",
+        by: "Penny Smith",
+        checkIns: "19 Check-Ins",
+        dateObj: new Date("2024-10-15"),
+      },
+      {
+        id: "g2-14",
+        title: "Freshman English 4th Period 10/1/24",
+        date: "Oct 1, 2024",
+        by: "Penny Smith",
+        checkIns: "21 Check-Ins",
+        dateObj: new Date("2024-10-01"),
+      },
+      {
+        id: "g2-15",
+        title: "Freshman English 4th Period 9/15/24",
+        date: "Sep 15, 2024",
+        by: "Penny Smith",
+        checkIns: "20 Check-Ins",
+        dateObj: new Date("2024-09-15"),
+      },
+      {
+        id: "g2-16",
+        title: "Freshman English 4th Period 9/1/24",
+        date: "Sep 1, 2024",
+        by: "Penny Smith",
+        checkIns: "22 Check-Ins",
+        dateObj: new Date("2024-09-01"),
+      },
     ],
   },
 ]
@@ -178,9 +441,18 @@ function Dashboard() {
     setExportDialogOpen,
     setExportingGroupName,
   } = useAppContext()
+
   const [dialogOpen, setDialogOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<"events" | "groups">("events")
+
+  const [previousEventsModalOpen, setPreviousEventsModalOpen] = useState(false)
+  const [upcomingEventsModalOpen, setUpcomingEventsModalOpen] = useState(false)
+  const [groupHistoryModalOpen, setGroupHistoryModalOpen] = useState(false)
+  const [selectedGroupHistory, setSelectedGroupHistory] = useState<{ name: string; events: any[] }>({
+    name: "",
+    events: [],
+  })
 
   // Sort events by date
   const sortedPreviousEvents = useMemo(() => {
@@ -208,21 +480,35 @@ function Dashboard() {
     setDialogOpen(true)
   }
 
+  const handleShowMorePreviousEvents = () => {
+    setPreviousEventsModalOpen(true)
+  }
+
+  const handleShowMoreUpcomingEvents = () => {
+    setUpcomingEventsModalOpen(true)
+  }
+
+  const handleShowGroupHistory = (groupName: string, events: any[]) => {
+    setSelectedGroupHistory({ name: groupName, events })
+    setGroupHistoryModalOpen(true)
+  }
+
   return (
-    <section className=" mx-auto">
+    <section className="mx-auto">
       {/* Header */}
       <div className="gradient-bar flex flex-wrap items-center justify-between py-16 px-10 gap-y-4">
-         <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <img src="/logo.png" width={25} height={25} alt="logo" />
           <span className="font-extrabold text-3xl text-zinc-800">present</span>
         </div>
+
         <div className="flex items-center gap-4">
-          <Link to="/check-in" className="px-5 py-2 border border-gray-400 rounded-lg md:block hidden">
+          <Link to="/check-in" className="px-5 py-2 border font-medium border-gray-400 rounded-lg md:block hidden">
             Check-In
           </Link>
           <Link
             to="/create"
-            className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-zinc-700  transition ease-in delay-150 duration-150 cursor-pointer"
+            className="px-5 py-2 bg-black text-white rounded-lg md:block hidden hover:bg-zinc-700 transition ease-in delay-150 duration-150 cursor-pointer"
           >
             Create
           </Link>
@@ -258,21 +544,21 @@ function Dashboard() {
       </div>
 
       <ModalSystem open={dialogOpen} setOpen={setDialogOpen} />
-
       <ExportDialog />
 
       <div className="p-10">
-        <h1 className="text-3xl font-semibold text-zinc-900">Welcome Back, {user.firstName}</h1>
+        <h1 className="text-3xl font-bold text-zinc-900">Welcome Back, {user.firstName}</h1>
+
         <div className="flex items-center my-8 gap-3">
           <button
             onClick={() => setActiveTab("events")}
-            className={`px-5 py-1.5 rounded-lg border ${activeTab === "events" ? "border-gray-900 bg-gray-100" : "border-gray-400"}`}
+            className={`px-5 py-1.5 font-medium rounded-lg border ${activeTab === "events" ? "border-gray-900 bg-gray-100" : "border-gray-400"}`}
           >
             My Events
           </button>
           <button
             onClick={() => setActiveTab("groups")}
-            className={`px-6 py-1.5 rounded-lg border ${activeTab === "groups" ? "border-gray-900 bg-gray-100" : "border-gray-400"}`}
+            className={`px-6 py-1.5 font-medium rounded-lg border ${activeTab === "groups" ? "border-gray-900 bg-gray-100" : "border-gray-400"}`}
           >
             My Groups
           </button>
@@ -280,44 +566,94 @@ function Dashboard() {
 
         {activeTab === "events" ? (
           <>
-            <h2 className="text-xl font-semibold text-zinc-900 mt-8">Previous Events</h2>
+            {/* Previous Events Section */}
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-xl font-bold text-zinc-900">Previous Events</h2>
+              {sortedPreviousEvents.length > 16 && (
+                <Button
+                  variant="outline"
+                  onClick={handleShowMorePreviousEvents}
+                  className="flex items-center gap-2 bg-transparent"
+                >
+                  See More <ChevronRight className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+
             {sortedPreviousEvents.length === 0 ? (
               <div className="w-full border border-gray-400 h-52 rounded-xl mt-5">
-                <div className="mt-16 text-zinc-900 font-semibold text-center text-xl">No Previous Events Yet.</div>
-                <div className="text-zinc-900 font-semibold pt-1 text-center">Create an event here</div>
+                <div className="mt-16 text-zinc-900 font-bold text-center text-xl">No Previous Events Yet.</div>
+                <div className="text-zinc-900 font-bold pt-1 text-center">Create an event here</div>
               </div>
             ) : (
               <div className="mt-5">
-                <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 gap-0">
-                  {sortedPreviousEvents.map((event) => (
-                    <EventCard key={event.id} {...event} />
-                  ))}
-                </div>
+                <Carousel
+                  opts={{
+                    align: "start",
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2 md:-ml-4">
+                    {sortedPreviousEvents.slice(0, 16).map((event) => (
+                      <CarouselItem
+                        key={event.id}
+                        className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                      >
+                        <EventCard {...event} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
               </div>
             )}
 
-            <h2 className="text-xl font-semibold text-zinc-900 mt-8">Upcoming Events</h2>
+            {/* Upcoming Events Section */}
+            <div className="flex items-center justify-between mb-5 mt-8">
+              <h2 className="text-xl font-bold text-zinc-900">Upcoming Events</h2>
+              {sortedUpcomingEvents.length > 16 && (
+                <Button
+                  variant="outline"
+                  onClick={handleShowMoreUpcomingEvents}
+                  className="flex items-center gap-2 bg-transparent"
+                >
+                  See More <ChevronRight className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+
             {sortedUpcomingEvents.length === 0 ? (
               <div className="w-full border border-gray-400 h-52 rounded-xl mt-5">
-                <div className="mt-16 text-zinc-900 font-semibold text-center text-xl">No Upcoming Events Yet.</div>
-                <div className="text-zinc-900 font-semibold pt-1 text-center">Create an event here</div>
+                <div className="mt-16 text-zinc-900 font-bold text-center text-xl">No Upcoming Events Yet.</div>
+                <div className="text-zinc-900 font-bold pt-1 text-center">Create an event here</div>
               </div>
             ) : (
               <div className="mt-5">
-                <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 gap-0">
-                  {sortedUpcomingEvents.map((event) => (
-                    <EventCard key={event.id} {...event} />
-                  ))}
-                </div>
+                <Carousel
+                  opts={{
+                    align: "start",
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2 md:-ml-4">
+                    {sortedUpcomingEvents.slice(0, 16).map((event) => (
+                      <CarouselItem
+                        key={event.id}
+                        className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                      >
+                        <EventCard {...event} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
               </div>
             )}
           </>
         ) : (
           <>
             <div className="flex items-center justify-between mb-5">
-              <div className="md:text-2xl text-xl px-4 font-semibold text-zinc-900 flex gap-2">
+              <div className="md:text-2xl text-xl md:px-4 font-bold text-zinc-900 flex gap-2">
                 {groupsUsageText}
-                <button className="cursor-pointer " onClick={() => setDialogOpen(true)}>
+                <button className="cursor-pointer" onClick={() => setDialogOpen(true)}>
                   <Plus className="text-gray-300 hover:text-gray-600" />
                 </button>
               </div>
@@ -325,51 +661,78 @@ function Dashboard() {
 
             {createdGroups.length === 0 ? (
               <div className="w-full border border-gray-400 h-52 rounded-xl mt-5">
-                <div className="mt-16 text-zinc-900 font-semibold text-center text-xl">No Groups Yet.</div>
-                <div className="text-zinc-900 font-semibold pt-1 text-center">Create a group here</div>
+                <div className="mt-16 text-zinc-900 font-bold text-center text-xl">No Groups Yet.</div>
+                <div className="text-zinc-900 font-bold pt-1 text-center">Create a group here</div>
               </div>
             ) : (
-              <div className="lg:px-4 md:space-y-8 space-y-3">
+              <div className="lg:px-4 md:space-y-8 space-y-6">
                 {(currentPlan === "free"
                   ? groupData.slice(0, Math.min(1, createdGroups.length))
                   : groupData.slice(0, createdGroups.length)
                 ).map((group, idx) => {
-                  //dev reminder: Sort group events by date (most recent first)
                   const sortedGroupEvents = [...group.events].sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime())
                   const groupName = createdGroups[idx]?.name || group.groupName
                   const groupId = createdGroups[idx]?.id || group.groupName
 
                   return (
                     <div key={idx}>
-                      <h3 className="md:text-2xl text-lg font-semibold text-zinc-800 mb-3 gap-2.5 flex items-center">
-                        {groupName}
-                        <button
-                          onClick={handleEditGroupModal}
-                          className="p-1 hover:bg-gray-100 rounded transition-colors"
-                        >
-                          <Pencil className="w-5 h-5 text-gray-600" />
-                        </button>
-                        <button
-                          onClick={() => handleExportGroup(groupName)}
-                          className="p-1 hover:bg-gray-100 rounded transition-colors"
-                        >
-                          <Cloud className="w-5 h-5 text-gray-600" />
-                        </button>
-                      </h3>
-                      <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 gap-0 ">
-                        {sortedGroupEvents.map((event) => (
-                          <GroupCard
-                            key={event.id}
-                            id={event.id}
-                            title={event.title}
-                            date={event.date}
-                            by={event.by}
-                            checkIns={event.checkIns}
-                            groupName={groupName}
-                            groupId={groupId}
-                          />
-                        ))}
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="md:text-2xl text-base font-bold text-zinc-800 gap-2.5 flex items-center">
+                          {groupName}
+                          <button
+                            onClick={handleEditGroupModal}
+                            className="p-1 hover:bg-gray-100 rounded transition-colors"
+                          >
+                            <Pencil className="w-5 h-5 text-gray-600" />
+                          </button>
+                          <button
+                            onClick={() => handleExportGroup(groupName)}
+                            className="p-1 hover:bg-gray-100 rounded transition-colors"
+                          >
+                            <Cloud className="w-5 h-5 text-gray-600" />
+                          </button>
+                        </h3>
+
                       </div>
+
+                      <Carousel
+                        opts={{
+                          align: "start",
+                        }}
+                        className="w-full"
+                      >
+                        <CarouselContent className="-ml-2 md:-ml-4">
+                          {sortedGroupEvents.slice(0, 16).map((event) => (
+                            <CarouselItem
+                              key={event.id}
+                              className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                            >
+                              <GroupCard
+                                id={event.id}
+                                title={event.title}
+                                date={event.date}
+                                by={event.by}
+                                checkIns={event.checkIns}
+                                groupName={groupName}
+                                groupId={groupId}
+                              />
+                            </CarouselItem>
+                          ))}
+                        </CarouselContent>
+                      </Carousel>
+
+                      <div className="flex justify-center items-center">
+                        {sortedGroupEvents.length > 16 && (
+                          <Button
+                            variant="outline"
+                            onClick={() => handleShowGroupHistory(groupName, sortedGroupEvents)}
+                            className="flex  mt-5 items-center gap-2 "
+                          >
+                            See More <ChevronRight className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+
                     </div>
                   )
                 })}
@@ -399,7 +762,8 @@ function Dashboard() {
             >
               Check-In
             </Link>
-            <Link to={'/create'}
+            <Link
+              to={"/create"}
               className="w-full px-5 py-3 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer"
             >
               Create
@@ -407,6 +771,27 @@ function Dashboard() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <EventsModal
+        isOpen={previousEventsModalOpen}
+        onClose={() => setPreviousEventsModalOpen(false)}
+        events={sortedPreviousEvents}
+        title="All Previous Events"
+      />
+
+      <EventsModal
+        isOpen={upcomingEventsModalOpen}
+        onClose={() => setUpcomingEventsModalOpen(false)}
+        events={sortedUpcomingEvents}
+        title="All Upcoming Events"
+      />
+
+      <GroupHistoryModal
+        isOpen={groupHistoryModalOpen}
+        onClose={() => setGroupHistoryModalOpen(false)}
+        groupName={selectedGroupHistory.name}
+        events={selectedGroupHistory.events}
+      />
     </section>
   )
 }

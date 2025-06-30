@@ -63,17 +63,17 @@ export default function Admin() {
   if (!hasAdminAccess) {
     return (
       <div className="p-4">
-        <h3 className="text-xl sm:text-2xl font-semibold mt-4">Manage team members</h3>
+        <h3 className="text-xl sm:text-2xl font-bold mt-4">Manage team members</h3>
         <div className="mt-6 space-y-4">
           <div className="border border-gray-400 h-44 rounded-md p-4">
-            <h4 className="font-semibold mb-2 text-center text-lg mt-10">
+            <h4 className="font-bold mb-2 text-center text-lg mt-10">
               Upgrade to Present Pro to unlock admin features
             </h4>
-            <p className="text-gray-600 text-sm text-center -mt-2">
+            <p className="text-gray-600 text-sm text-center font-medium -mt-2">
               Admins can add events, view check-ins, and export data.
             </p>
           </div>
-          <button className="bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-800 transition-all cursor-pointer">
+          <button className="bg-black text-white font-medium rounded-lg px-4 py-2 hover:bg-gray-800 transition-all cursor-pointer">
             Upgrade to Present Pro
           </button>
         </div>
@@ -85,7 +85,7 @@ export default function Admin() {
   if (viewMode === "edit") {
     return (
       <div className="p-4">
-        <h3 className="text-xl sm:text-2xl font-semibold mt-4">Manage team members</h3>
+        <h3 className="text-xl sm:text-2xl font-bold mt-4">Manage team members</h3>
 
         {/* Editable Team Name */}
         <div className="mt-6 flex items-center gap-2">
@@ -342,7 +342,7 @@ export default function Admin() {
             <>
               <button
                 onClick={handleEditTeam}
-                className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm"
+                className="border border-gray-300 font-semibold text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm"
               >
                 Edit Team
               </button>

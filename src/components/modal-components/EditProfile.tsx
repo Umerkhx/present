@@ -54,7 +54,7 @@ export default function EditProfile() {
 
   return (
     <div className="p-4">
-      <h3 className="text-2xl text-gray-900 font-semibold">Edit Your Profile</h3>
+      <h3 className="text-2xl text-gray-900 font-bold">Edit Your Profile</h3>
 
       <div className="mt-10 flex flex-col mx-auto justify-center items-center max-w-md">
         <div className="flex md:flex-row flex-col items-center justify-center lg:gap-10 gap-5">
@@ -103,7 +103,7 @@ export default function EditProfile() {
             name="firstName"
             value={formData.firstName}
             onChange={handleChange}
-            className={`w-full px-4 py-3 border ${
+            className={`w-full px-4 py-3 border font-medium ${
               errors.firstName ? "border-red-500" : "border-gray-300"
             } rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all`}
             placeholder="Enter your first name"
@@ -118,7 +118,7 @@ export default function EditProfile() {
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
-            className={`w-full px-4 py-3 border ${
+            className={`w-full px-4 py-3 border font-medium ${
               errors.lastName ? "border-red-500" : "border-gray-300"
             } rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all`}
             placeholder="Enter your last name"

@@ -81,7 +81,7 @@ export default function ModalSystem({ open, setOpen }: ModalSystemProps) {
             <div className="flex justify-between items-center p-4">
               <div className="flex items-center gap-1">
                 <img src="/logo.png" width={25} height={25} alt="logo" />
-                <h3 className="text-3xl font-semibold"> Present </h3>
+                <h3 className="text-3xl font-bold"> present </h3>
               </div>
               <div className="flex items-center gap-5">
                 <button

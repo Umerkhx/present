@@ -18,7 +18,7 @@ export function CheckinHeader() {
                 <Link to={'/login'} className="w-full px-5 py-2 border border-gray-400 rounded-lg text-center font-medium hover:bg-gray-50 transition-colors lg:block hidden">
                     Log-in
                 </Link>
-                <Link to={'/create'} className="w-full px-5 py-2 bg-black text-white rounded-lg text-center font-medium hover:bg-gradient-to-r hover:from-[#31CCD6] hover:via-[#66C587] hover:to-[#BBD16B] hover:text-black transition ease-in delay-100 duration-150 cursor-pointer lg:block hidden">
+                <Link to={'/create'} className="w-full px-5 py-2 bg-black text-white rounded-lg text-center font-medium hover:bg-zinc-800  transition ease-in delay-100 duration-150 cursor-pointer lg:block hidden">
                     Create
                 </Link>
                 <button

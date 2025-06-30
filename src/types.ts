@@ -8,7 +8,7 @@ export interface LocationData {
 
 export interface EventData {
   name: string;
-  date: Date;
+  date: string;
   startTime: string;
   endTime: string;
   openCheckIn: boolean;

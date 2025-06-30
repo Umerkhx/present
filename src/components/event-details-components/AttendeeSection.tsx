@@ -9,8 +9,8 @@ export default function AttendeesSection({ checkIns, showQuestions = false, onEx
     <div className="bg-white rounded-lg p-6 shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">See who's present</h2>
-          <p className="text-sm text-gray-500">Event check-ins</p>
+          <h2 className="text-xl font-bold text-gray-900">See who's present</h2>
+          <p className="text-sm font-medium text-gray-500">Event check-ins</p>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="ghost" size="sm" onClick={onExportClick}>
@@ -23,14 +23,14 @@ export default function AttendeesSection({ checkIns, showQuestions = false, onEx
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Check-in</th>
-              <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">Time</th>
+              <th className="text-left py-3 px-2 text-sm font-semibold text-gray-500">Check-in</th>
+              <th className="text-left py-3 px-2 text-sm font-semibold text-gray-500">Time</th>
               {showQuestions && (
                 <>
-                  <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">
+                  <th className="text-left py-3 px-2 text-sm font-semibold text-gray-500">
                     What is the answer to problem 1.a*
                   </th>
-                  <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">
+                  <th className="text-left py-3 px-2 text-sm font-semibold text-gray-500">
                     What is the answer to problem 1.b*
                   </th>
                 </>

@@ -36,7 +36,7 @@ export default function AttendanceChart({ attendanceStats, showCount = false }: 
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-900">
+            <span className="text-xl font-bold text-gray-900">
               {showCount ? attendanceStats.checkedIn : `${attendanceStats.percentage}%`}
             </span>
           </div>

@@ -33,7 +33,6 @@ export default function ModalGroup() {
   const activeMembersCount = members.filter((m) => m.firstName && m.lastName).length
   const canAddMoreMembers = members.length < limits.maxMembersPerGroup
 
-  // Calculate how many field slots to show (3 initially, then 4, then 5)
   const totalFieldSlots = Math.min(3 + activeFields.length, 5)
   const availableFields = ADDITIONAL_FIELDS.filter((field) => !activeFields.includes(field.key))
   const nextAvailableField = availableFields[0]
@@ -88,14 +87,13 @@ export default function ModalGroup() {
     updateMember(memberId, fieldMap[fieldKey] as any, value)
   }
 
-  // Generate grid columns based on total field slots
   const gridCols = `40px 60px repeat(${totalFieldSlots}, 1fr)`
 
   return (
     <div className="p-4 w-full max-w-full">
-      <h3 className="text-start text-xl sm:text-2xl font-semibold mt-3">Add Members to {groupName || "Group"}</h3>
+      <h3 className="text-start text-xl sm:text-2xl font-bold mt-3">Add Members to {groupName || "Group"}</h3>
 
-      <div className="flex items-center gap-2 font-medium text-black text-lg sm:text-xl mt-4">
+      <div className="flex items-center gap-2 font-semibold text-black text-lg sm:text-xl mt-4">
         <span className="truncate">{groupName || "2024/25 Freshman English Period 5"}</span>
         <Plus className="text-gray-500 w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
       </div>
@@ -115,7 +113,7 @@ export default function ModalGroup() {
       <button
         onClick={addNewMember}
         disabled={!canAddMoreMembers}
-        className={`rounded-lg py-2 px-2.5 border font-medium mt-4 mb-6 text-sm sm:text-base ${
+        className={`rounded-lg py-2 px-2.5 border font-semibold mt-4 mb-6 text-sm sm:text-base ${
           canAddMoreMembers
             ? "border-gray-500 text-black hover:bg-gray-50"
             : "border-gray-300 text-gray-400 cursor-not-allowed"
@@ -130,14 +128,14 @@ export default function ModalGroup() {
       <div className="hidden sm:grid sm:gap-4 mb-4 mt-6" style={{ gridTemplateColumns: gridCols }}>
         <div></div>
         <div></div>
-        <div className="font-medium text-black">First Name</div>
-        <div className="font-medium text-black">Last Name</div>
+        <div className="font-semibold text-black">First Name</div>
+        <div className="font-semibold text-black">Last Name</div>
 
         {/* Show active fields */}
         {activeFields.map((fieldKey) => {
           const field = ADDITIONAL_FIELDS.find((f) => f.key === fieldKey)
           return (
-            <div key={fieldKey} className="font-medium text-black">
+            <div key={fieldKey} className="font-semibold text-black">
               {field?.label}
             </div>
           )
@@ -145,7 +143,7 @@ export default function ModalGroup() {
 
         {/* Show next available field slot if we haven't reached the limit */}
         {activeFields.length < 3 && nextAvailableField && (
-          <div className="font-medium flex items-center gap-2 text-gray-400">
+          <div className="font-semibold flex items-center gap-2 text-gray-400">
             <span className="truncate">New Field</span>
             <button
               className="w-6 h-6 p-0 hover:bg-gray-100 rounded-full"
@@ -177,7 +175,7 @@ export default function ModalGroup() {
 
             {/* Avatar */}
             <Avatar className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
-              <AvatarFallback className={`${member.bgColor} text-white font-medium text-xs sm:text-sm`}>
+              <AvatarFallback className={`${member.bgColor} text-white font-semibold text-xs sm:text-sm`}>
                 {member.initials || ""}
               </AvatarFallback>
             </Avatar>
@@ -187,7 +185,7 @@ export default function ModalGroup() {
               <div className="flex gap-2 pr-4" style={{ minWidth: `${totalFieldSlots * 130}px` }}>
                 {/* First Name */}
                 <div className="flex-1 min-w-[120px]">
-                  <div className="text-xs font-medium text-black mb-1">First Name</div>
+                  <div className="text-xs font-semibold text-black mb-1">First Name</div>
                   <Input
                     placeholder="First Name"
                     value={member.firstName}
@@ -198,7 +196,7 @@ export default function ModalGroup() {
 
                 {/* Last Name */}
                 <div className="flex-1 min-w-[120px]">
-                  <div className="text-xs font-medium text-black mb-1">Last Name</div>
+                  <div className="text-xs font-semibold text-black mb-1">Last Name</div>
                   <Input
                     placeholder="Last Name"
                     value={member.lastName}
@@ -212,7 +210,7 @@ export default function ModalGroup() {
                   const field = ADDITIONAL_FIELDS.find((f) => f.key === fieldKey)
                   return (
                     <div key={fieldKey} className="flex-1 min-w-[120px]">
-                      <div className="text-xs font-medium text-black mb-1">{field?.label}</div>
+                      <div className="text-xs font-semibold text-black mb-1">{field?.label}</div>
                       <Input
                         placeholder={field?.placeholder}
                         value={getFieldValue(member, fieldKey)}
@@ -226,7 +224,7 @@ export default function ModalGroup() {
                 {/* Next Available Field Slot for Mobile */}
                 {activeFields.length < 3 && nextAvailableField && (
                   <div className="flex-1 min-w-[120px]">
-                    <div className="text-xs font-medium text-gray-400 mb-1 flex items-center gap-1">
+                    <div className="text-xs font-semibold text-gray-400 mb-1 flex items-center gap-1">
                       <span>New Field</span>
                       <button
                         className="hover:bg-gray-100 rounded-full"
@@ -295,9 +293,9 @@ export default function ModalGroup() {
 
       {/* Group Member Verification */}
       <div className="mt-6 sm:mt-8">
-        <h4 className="text-start font-semibold text-black mb-2 text-sm sm:text-base">Group member verification</h4>
+        <h4 className="text-start font-bold text-black mb-2 text-sm sm:text-base">Group member verification</h4>
         <Select value={verificationMethod} onValueChange={(value: VerificationMethod) => setVerificationMethod(value)}>
-          <SelectTrigger className="w-auto bg-transparent border-none p-0 h-auto hover:bg-transparent text-sm sm:text-base font-medium">
+          <SelectTrigger className="w-auto bg-transparent border-none p-0 h-auto hover:bg-transparent text-sm sm:text-base font-semibold">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -312,7 +310,7 @@ export default function ModalGroup() {
 
       <button
         onClick={handleSaveGroup}
-        className="w-full lg:w-1/4 bg-black text-white hover:bg-gray-800 mt-6 py-2.5 sm:py-3 rounded-lg font-medium text-sm sm:text-base"
+        className="w-full lg:w-1/4 bg-black text-white hover:bg-gray-800 mt-6 py-2.5 sm:py-3 rounded-lg font-semibold text-sm sm:text-base"
       >
         Save
       </button>

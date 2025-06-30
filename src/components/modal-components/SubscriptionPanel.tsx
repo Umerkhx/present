@@ -8,7 +8,7 @@ export default function SubscriptionPanel() {
 
   return (
     <div className="p-4">
-      <h3 className="text-xl sm:text-2xl font-semibold mt-2">
+      <h3 className="text-xl sm:text-2xl font-bold mt-2">
         You are currently on the {getPlanDisplayName(currentPlan)} Plan
       </h3>
       <h3 className="text-lg sm:text-xl font-medium mt-2">Upgrade today to access more features</h3>
@@ -17,8 +17,8 @@ export default function SubscriptionPanel() {
           <div
             className={`border rounded-lg p-4 lg:h-80 ${currentPlan === "free" ? "border-gray-500 " : "border-gray-400"}`}
           >
-            <h4 className="font-semibold mb-2 text-left">Present Free</h4>
-            <p className="text-gray-900 text-left">$0 / Month</p>
+            <h4 className="font-bold mb-2 text-left">Present Free</h4>
+            <p className="text-gray-900 text-left font-medium">$0 / Month</p>
             <ul className="text-zinc-950 font-medium mt-4">
               <li className="flex justify-start">
                 <Dot /> Unlimited Events
@@ -35,7 +35,7 @@ export default function SubscriptionPanel() {
             </ul>
           </div>
           <button
-            className={`cursor-pointer border rounded-lg px-4 py-1.5 text-center mt-2 w-full ${
+            className={`cursor-pointer font-medium border rounded-lg px-4 py-1.5 text-center mt-2 w-full ${
               currentPlan === "free" ? "border-gray-400 text-black" : "border-gray-400"
             }`}
             onClick={() => currentPlan !== "free" && handleDowngrade("free")}
@@ -49,8 +49,8 @@ export default function SubscriptionPanel() {
           <div
             className={`border rounded-lg p-4 lg:h-80 ${currentPlan === "plus" ? "border-gray-500 " : "border-gray-400"}`}
           >
-            <h4 className="font-semibold mb-2 text-left">Present Plus</h4>
-            <p className="text-gray-900 text-left">$12 / Month</p>
+            <h4 className="font-bold mb-2 text-left">Present Plus</h4>
+            <p className="text-gray-900 text-left font-medium">$12 / Month</p>
             <ul className="text-zinc-950 font-medium mt-4">
               <li className="flex justify-start">
                 <Dot /> Unlimited Events
@@ -70,7 +70,7 @@ export default function SubscriptionPanel() {
             </ul>
           </div>
           <button
-            className={`cursor-pointer rounded-lg px-4 py-1.5 text-center mt-2 w-full transition-all ${
+            className={`cursor-pointer font-medium rounded-lg px-4 py-1.5 text-center mt-2 w-full transition-all ${
               currentPlan === "plus"
                 ? "border border-gray-400 text-black"
                 : "bg-black hover:bg-zinc-900 text-white border border-gray-400"
@@ -86,8 +86,8 @@ export default function SubscriptionPanel() {
           <div
             className={`border rounded-lg p-4 lg:h-80 ${currentPlan === "pro" ? "border-gray-500 " : "border-gray-400"}`}
           >
-            <h4 className="font-semibold mb-2 text-left">Present Pro</h4>
-            <p className="text-gray-900 text-left">$25 / Month</p>
+            <h4 className="font-bold mb-2 text-left">Present Pro</h4>
+            <p className="text-gray-900 text-left font-medium">$25 / Month</p>
             <ul className="text-zinc-950 font-medium mt-4">
               <li className="flex justify-start">
                 <Dot /> Unlimited Events
@@ -113,7 +113,7 @@ export default function SubscriptionPanel() {
             </ul>
           </div>
           <button
-            className={`cursor-pointer rounded-lg px-4 py-1.5 text-center mt-2 w-full transition-all ${
+            className={`cursor-pointer font-medium rounded-lg px-4 py-1.5 text-center mt-2 w-full transition-all ${
               currentPlan === "pro"
                 ? "border border-gray-400 text-black"
                 : "bg-black hover:bg-zinc-900 text-white border border-gray-400"

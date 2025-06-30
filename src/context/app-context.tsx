@@ -210,6 +210,102 @@ const initialEvents: Event[] = [
   },
   {
     id: "5",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "6",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "7",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "8",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "9",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "10",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "11",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "12",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "13",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "14",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "15",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "16",
+    title: "Texas McCombs Alumni Meeting",
+    date: "Jan 10, 2025",
+    by: "Matteo Zamboni",
+    checkIns: "73 Check-ins",
+    type: "previous",
+  },
+  {
+    id: "17",
     title: "Texas McCombs Alumni Mixer",
     date: "May 21, 2025",
     by: "Matteo Zamboni",
@@ -217,17 +313,17 @@ const initialEvents: Event[] = [
     type: "upcoming",
   },
   {
-    id: "6",
-    title: "4th Period Art Class (24/25)",
-    date: "May 30, 2025",
+    id: "18",
+    title: "Dallas Rowing Club Youth Summer Camp Week 1",
+    date: "June 21, 2025",
     by: "Matteo Zamboni",
     checkIns: "0 Check-in",
     type: "upcoming",
   },
   {
-    id: "7",
-    title: "Dallas Rowing Club Youth Summer Camp Week 1",
-    date: "June 21, 2025",
+    id: "19",
+    title: "4th Period Art Class (24/25)",
+    date: "May 30, 2025",
     by: "Matteo Zamboni",
     checkIns: "0 Check-in",
     type: "upcoming",
@@ -381,8 +477,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   // Export states
   const [exportDialogOpen, setExportDialogOpen] = useState(false)
-  const [exportStartDate, setExportStartDate] = useState("2025-06-17")
-  const [exportEndDate, setExportEndDate] = useState("2025-06-17")
+  const [exportStartDate, setExportStartDate] = useState("June 17, 2025")
+  const [exportEndDate, setExportEndDate] = useState("June 20, 2025")
   const [exportByEvent, setExportByEvent] = useState(true)
   const [includeCheckInResponses, setIncludeCheckInResponses] = useState(false)
   const [exportingGroupName, setExportingGroupName] = useState("")

@@ -1,0 +1,67 @@
+/* Custom Swiper Styles */
+.events-swiper,
+.group-events-swiper {
+  padding: 20px 0 50px 0;
+}
+
+.events-swiper .swiper-slide,
+.group-events-swiper .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.events-swiper .swiper-button-next,
+.events-swiper .swiper-button-prev,
+.group-events-swiper .swiper-button-next,
+.group-events-swiper .swiper-button-prev {
+  color: #374151;
+  background: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.events-swiper .swiper-button-next:after,
+.events-swiper .swiper-button-prev:after,
+.group-events-swiper .swiper-button-next:after,
+.group-events-swiper .swiper-button-prev:after {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.events-swiper .swiper-pagination,
+.group-events-swiper .swiper-pagination {
+  bottom: 10px;
+}
+
+.events-swiper .swiper-pagination-bullet,
+.group-events-swiper .swiper-pagination-bullet {
+  background: #9ca3af;
+  opacity: 0.5;
+}
+
+.events-swiper .swiper-pagination-bullet-active,
+.group-events-swiper .swiper-pagination-bullet-active {
+  background: #374151;
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .events-swiper .swiper-button-next,
+  .events-swiper .swiper-button-prev,
+  .group-events-swiper .swiper-button-next,
+  .group-events-swiper .swiper-button-prev {
+    width: 32px;
+    height: 32px;
+  }
+
+  .events-swiper .swiper-button-next:after,
+  .events-swiper .swiper-button-prev:after,
+  .group-events-swiper .swiper-button-next:after,
+  .group-events-swiper .swiper-button-prev:after {
+    font-size: 14px;
+  }
+}

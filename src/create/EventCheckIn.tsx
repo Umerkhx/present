@@ -35,7 +35,7 @@ const EventCheckIn: React.FC = () => {
 
   const [eventData, setEventData] = useState<EventData>({
     name: "",
-    date: new Date(),
+    date: "",
     startTime: "12:20",
     endTime: "--:--",
     openCheckIn: true,

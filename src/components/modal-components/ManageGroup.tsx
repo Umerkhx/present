@@ -18,7 +18,7 @@ export default function ManageGroup() {
 
   return (
     <div className="p-2">
-      <h3 className="text-start text-xl sm:text-2xl font-semibold mt-4">Manage groups</h3>
+      <h3 className="text-start text-xl sm:text-2xl font-bold mt-4">Manage groups</h3>
       <div className="flex justify-start items-center gap-2 font-medium text-black text-lg sm:text-xl mt-5">
         You have created {createdGroups.length}/{limits.maxGroups} groups
         <Plus className="text-gray-500 w-6 h-6 sm:w-8 sm:h-8" />
@@ -33,14 +33,14 @@ export default function ManageGroup() {
                   className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
                   onClick={() => handleViewGroupDetails(group.id)}
                 >
-                  <div className="text-lg sm:text-xl font-semibold text-black hover:text-blue-950 transition-colors">
+                  <div className="text-lg sm:text-xl font-bold text-black hover:text-blue-950 transition-colors">
                     {group.name}
                   </div>
                   <div className="text-sm text-gray-600">Group Name</div>
                 </div>
 
                 <div className="text-center">
-                  <div className="text-lg sm:text-xl font-semibold text-black">
+                  <div className="text-lg sm:text-xl font-bold text-black">
                     {group.memberCount}/{limits.maxMembersPerGroup}
                   </div>
                   <div className="text-sm text-gray-600">Group Members</div>
@@ -67,7 +67,7 @@ export default function ManageGroup() {
         </div>
       ) : (
         <div className="border rounded-md p-6 mt-7 mb-5 h-32 sm:h-48 flex flex-col items-center justify-center text-center">
-          <h4 className="font-semibold text-base sm:text-lg">No groups yet.</h4>
+          <h4 className="font-bold text-base sm:text-lg">No groups yet.</h4>
           <p className="text-sm text-gray-900">Create a group here</p>
         </div>
       )}
@@ -75,7 +75,7 @@ export default function ManageGroup() {
       <button
         onClick={() => canAddMoreGroups && setGroupsView("add")}
         disabled={!canAddMoreGroups}
-        className={`text-center w-full sm:w-2/5 rounded-md py-2 sm:py-1.5 font-medium text-sm sm:text-base cursor-pointer transition-colors ${
+        className={`text-center w-full sm:w-2/5 rounded-md py-2 sm:py-1.5 font-semibold text-sm sm:text-base cursor-pointer transition-colors ${
           canAddMoreGroups ? "bg-black text-white hover:bg-gray-800" : "bg-zinc-900 text-gray-50 cursor-not-allowed"
         }`}
       >

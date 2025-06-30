@@ -87,7 +87,7 @@ export default function ExportDialog() {
     <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader className="flex flex-row items-center justify-between">
-          <h2 className="text-lg font-semibold">Export {exportingGroupName}</h2>
+          <h2 className="text-lg font-bold">Export {exportingGroupName}</h2>
           <button onClick={() => setExportDialogOpen(false)} className="text-gray-500 hover:text-gray-700">
             <X className="w-5 h-5" />
           </button>
@@ -110,10 +110,10 @@ export default function ExportDialog() {
                 value={exportEndDate}
                 onChange={(e) => setExportEndDate(e.target.value)}
                 className="border-none bg-transparent p-0 text-lg font-medium focus:outline-none"
-                placeholder="June 17, 2025"
+                placeholder="June 20, 2025"
               />
             </div>
-            <p className="text-sm text-gray-600">Export date range</p>
+            <p className="text-sm font-medium text-gray-600">Export date range</p>
           </div>
 
           {/* Export Options */}
@@ -131,7 +131,7 @@ export default function ExportDialog() {
                   }`}
                 />
               </button>
-              <span className="text-base">Export by event</span>
+              <span className="text-base font-medium">Export by event</span>
             </div>
 
             <div className="flex items-center justify-start gap-6">
@@ -147,7 +147,7 @@ export default function ExportDialog() {
                   }`}
                 />
               </button>
-              <span className="text-base">Include check-in question responses</span>
+              <span className="text-base font-medium">Include check-in question responses</span>
             </div>
           </div>
 
