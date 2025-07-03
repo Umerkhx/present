@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { useState } from "react"
-import { ChevronDown } from "lucide-react"
 import Toggle from "./Toggle"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select"
 import { useAppContext } from "../context/app-context"
